@@ -13,6 +13,7 @@ export default class Calculator extends React.Component {
     numberPressed(text) {
         const calculation = this.state.resultText;
         switch (text) {
+            // calculate the function
             case '=': {
                 if (!['+', '-', '*', '/'].includes(calculation.slice(-1))) {
                     this.setState({
@@ -22,10 +23,12 @@ export default class Calculator extends React.Component {
                 break;
             }
 
+            // add floating point (only one floating point)
             case '.': {
                 if (calculation.includes('.')) return;
             }
 
+            // default press
             default: {
                 this.setState({
                     resultText: calculation + text
@@ -37,35 +40,36 @@ export default class Calculator extends React.Component {
 
     operatorPressed(text) {
         let calText = this.state.resultText.split('');
-
         switch (text) {
+            // delete a char
             case 'DEL': {
                 calText.pop();
                 break;
             }
 
+            // add a char
             default: {
                 if (calText.length === 0) return;
 
                 const lastChar = calText.pop();
-                if (!['+', '-', '*', '/'].includes(lastChar)) {
+                const isOperatorChar = ['+', '-', '*', '/'].includes(lastChar);
+                if (!isOperatorChar) {
                     calText.push(lastChar);
                 }
-
                 calText.push(text);
                 break;
             }
         }
 
+        // reload calculation
         this.setState({
             resultText: calText.join('')
         });
     }
 
-    render() {
-        // construct numbers rows
+    buildNumberRows() {
         const nums = [[7, 8, 9], [4, 5, 6], [1, 2, 3], ['.', 0, '=']];
-        let num_rows = [];
+        const output = [];
         for (let i = 0; i < 4; i++) {
             row = []
             for (let j = 0; j < 3; j++) {
@@ -73,33 +77,34 @@ export default class Calculator extends React.Component {
                     <Text style={styles.btnText}>{nums[i][j]}</Text>
                 </TouchableOpacity>)
             }
-            num_rows.push(<View style={styles.row}>{row}</View>);
+            output.push(<View style={styles.row}>{row}</View>);
         }
+        return output;
+    }
 
-        // construct operation rows
-        let ops_row = [];
+    buildOperatorRow() {
         const ops = ['DEL', '+', '-', '*', '/'];
+        const output = [];
         for (const op of ops) {
-            ops_row.push(<TouchableOpacity style={styles.btn} onPress={() => this.operatorPressed(op)}>
+            output.push(<TouchableOpacity style={styles.btn} onPress={() => this.operatorPressed(op)}>
                 <Text style={styles.btnText}>{op}</Text>
             </TouchableOpacity>)
         }
+        return output;
+    }
 
+    render() {
+        const num_rows = this.buildNumberRows();
+        const ops_row = this.buildOperatorRow();
         return (
             <View style={styles.container}>
-
                 <View style={styles.calculation}>
                     <Text style={styles.resultText}>{this.state.resultText}</Text>
                 </View>
 
                 <View style={styles.buttons}>
-                    <View style={styles.numbers}>
-                        {num_rows}
-                    </View>
-
-                    <View style={styles.operations}>
-                        {ops_row}
-                    </View>
+                    <View style={styles.numbers}>{num_rows}</View>
+                    <View style={styles.operations}>{ops_row}</View>
                 </View>
             </View>
         );
