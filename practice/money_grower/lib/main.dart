@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:money_grower/ui/budget_screen.dart';
-import 'package:money_grower/ui/dept_screen.dart';
-import 'package:money_grower/ui/statistics_screen.dart';
-import 'package:money_grower/ui/transaction_screen.dart';
+import 'package:money_grower/ui/budget_screen/budget_screen.dart';
+import 'package:money_grower/ui/dept_screen/dept_screen.dart';
+import 'package:money_grower/ui/statistics_screen/statistics_screen.dart';
+import 'package:money_grower/ui/transaction_screen/transaction_screen.dart';
 
 void main() => runApp(SimpleNoteApp());
 
@@ -43,8 +43,7 @@ class NoteScreenState extends State<NoteScreen> {
         title: Row(
           children: <Widget>[
             Image.asset('assets/coins.png', width: 64, height: 64),
-            SizedBox(width: 5),
-            Text("SỐ DƯ: 300,000đ"),
+            Text("Money Grower"),
           ],
         ),
         actions: <Widget>[
