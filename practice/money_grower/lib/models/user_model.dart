@@ -4,13 +4,18 @@ class UserModel {
   int income;
   int outgoings;
 
-  UserModel(this.username, this.income, this.outgoings);
+  static final UserModel _instance = UserModel._internal();
+  UserModel._internal();
+
+  factory UserModel() {
+    return _instance;
+  }
 
   UserModel.fromMap(Map snapshot, String id) {
-    this.id = id;
-    this.username = snapshot['username'];
-    this.income = snapshot['income'];
-    this.outgoings = snapshot['outgoings'];
+    _instance.id = id;
+    _instance.username = snapshot['username'];
+    _instance.income = snapshot['income'];
+    _instance.outgoings = snapshot['outgoings'];
   }
 
   toJson() {

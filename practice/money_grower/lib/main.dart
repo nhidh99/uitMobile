@@ -1,19 +1,32 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_grower/ui/budget_screen/budget_screen.dart';
 import 'package:money_grower/ui/dept_screen/dept_screen.dart';
 import 'package:money_grower/ui/statistics_screen/statistics_screen.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_screen.dart';
+import 'package:async_loader/async_loader.dart';
+
+import 'blocs/user_bloc.dart';
 
 void main() => runApp(SimpleNoteApp());
 
 class SimpleNoteApp extends StatelessWidget {
+  final GlobalKey<AsyncLoaderState> asyncLoaderState =
+      new GlobalKey<AsyncLoaderState>();
+
   @override
   Widget build(BuildContext context) {
+    final asyncLoader = new AsyncLoader(
+      key: asyncLoaderState,
+      initState: () async => await UserBloc().getUserByUsername('nhidh99'),
+      renderLoad: () => LoadingScreen(),
+      renderError: ([error]) => ErrorScreen(),
+      renderSuccess: ({data}) => MainScreen(),
+    );
+
     return new MaterialApp(
       title: "Simple Note",
-      home: new NoteScreen(),
+      home: asyncLoader,
       theme: ThemeData(
           // Define the default brightness and colors.
           primaryColor: Colors.green,
@@ -22,12 +35,46 @@ class SimpleNoteApp extends StatelessWidget {
   }
 }
 
-class NoteScreen extends StatefulWidget {
+class LoadingScreen extends StatelessWidget {
   @override
-  State<StatefulWidget> createState() => NoteScreenState();
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: <Widget>[
+            Image.asset('assets/coins.png', width: 64, height: 64),
+            Text("Money Grower"),
+          ],
+        ),
+      ),
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
 }
 
-class NoteScreenState extends State<NoteScreen> {
+class ErrorScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: <Widget>[
+            Image.asset('assets/coins.png', width: 64, height: 64),
+            Text("Money Grower"),
+          ],
+        ),
+      ),
+      body: Center(child: Text("Lỗi kết nối!", style: TextStyle(fontSize: 18))),
+    );
+  }
+}
+
+class MainScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MainScreenState();
+}
+
+class MainScreenState extends State<MainScreen> {
   int screenIndex = 0;
   final List<Widget> screenList = [
     TransactionScreen(),
