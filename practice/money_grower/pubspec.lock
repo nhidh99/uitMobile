@@ -108,7 +108,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.0"
+    version: "0.15.8"
   matcher:
     dependency: transitive
     description:
@@ -123,6 +123,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.7"
+  month_picker_strip:
+    dependency: "direct dev"
+    description:
+      name: month_picker_strip
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   path:
     dependency: transitive
     description:
@@ -163,6 +170,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.5"
+  sprintf:
+    dependency: "direct dev"
+    description:
+      name: sprintf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.2"
   stack_trace:
     dependency: transitive
     description:

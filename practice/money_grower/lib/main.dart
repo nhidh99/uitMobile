@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/ui/budget_screen/budget_screen.dart';
 import 'package:money_grower/ui/dept_screen/dept_screen.dart';
 import 'package:money_grower/ui/statistics_screen/statistics_screen.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_screen.dart';
 import 'package:async_loader/async_loader.dart';
+import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 
+import 'blocs/transaction_bloc.dart';
 import 'blocs/user_bloc.dart';
+import 'models/user_model.dart';
 
 void main() => runApp(SimpleNoteApp());
 
@@ -14,11 +18,22 @@ class SimpleNoteApp extends StatelessWidget {
   final GlobalKey<AsyncLoaderState> asyncLoaderState =
       new GlobalKey<AsyncLoaderState>();
 
+  init() async {
+    final userBloc = UserBloc();
+    await userBloc.getUserByUsername('nhidh99');
+
+    final transactionBloc = TransactionBloc();
+    final summary = TransactionSummary();
+    final response = await transactionBloc
+      .getTransactionSummaryOfMonth(DateTime.now(), 'nhidh99');
+    summary.fromMap(response);
+  }
+
   @override
   Widget build(BuildContext context) {
     final asyncLoader = new AsyncLoader(
       key: asyncLoaderState,
-      initState: () async => await UserBloc().getUserByUsername('nhidh99'),
+      initState: () async => await init(),
       renderLoad: () => LoadingScreen(),
       renderError: ([error]) => ErrorScreen(),
       renderSuccess: ({data}) => MainScreen(),
@@ -90,7 +105,17 @@ class MainScreenState extends State<MainScreen> {
         title: Row(
           children: <Widget>[
             Image.asset('assets/coins.png', width: 64, height: 64),
-            Text("Money Grower"),
+            SizedBox(width: 5),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 5),
+                Text("Tổng cộng:",
+                    style: TextStyle(fontSize: 14, color: Colors.black54)),
+                SizedBox(height: 2),
+                Text(FormatHelper().formatMoney(user.income - user.outgoings)),
+              ],
+            )
           ],
         ),
         actions: <Widget>[

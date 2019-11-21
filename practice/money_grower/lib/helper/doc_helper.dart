@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Document {
+class DocHelper {
   final Firestore db = Firestore.instance;
   CollectionReference ref;
 
-  Document(String path) {
+  DocHelper(String path) {
     ref = db.collection(path);
   }
 }

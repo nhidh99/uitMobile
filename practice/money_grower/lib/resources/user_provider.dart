@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:money_grower/api/doc_api.dart';
+import 'package:money_grower/helper/doc_helper.dart';
 import '../models/user_model.dart';
 
-class UserApiProvider {
+class UserProvider {
 
-  final doc = Document('users');
+  final doc = DocHelper('users');
 
   Future getUserByUsername(String username) async {
     final response = await doc.ref.where('username', isEqualTo: username).limit(1).getDocuments();
