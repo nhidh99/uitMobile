@@ -2,22 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 
-
-class TransactionSummaryBoard extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => TransactionSummaryState();
-}
-
-class TransactionSummaryState extends State<TransactionSummaryBoard> {
-   final formatter = FormatHelper();
-   final summary = TransactionSummary();
+class TransactionSummaryBoard extends StatelessWidget {
+  final formatter = FormatHelper();
+  final summary = TransactionSummary();
 
   @override
   Widget build(BuildContext context) {
     // Summary of total incoming
     return Column(children: <Widget>[
       Container(
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+          padding: EdgeInsets.fromLTRB(20, 15, 20, 0),
           color: Colors.white,
           child: Row(
             children: <Widget>[
@@ -36,7 +30,7 @@ class TransactionSummaryState extends State<TransactionSummaryBoard> {
 
       // Summary of total outgoings
       Container(
-          padding: EdgeInsets.fromLTRB(20, 15, 20, 0),
+          padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
           color: Colors.white,
           child: Row(
             children: <Widget>[
@@ -55,7 +49,7 @@ class TransactionSummaryState extends State<TransactionSummaryBoard> {
 
       // Summary of total transaction value
       Container(
-          padding: EdgeInsets.fromLTRB(20, 15, 20, 20),
+          padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
           color: Colors.white,
           child: Row(
             children: <Widget>[
@@ -72,17 +66,5 @@ class TransactionSummaryState extends State<TransactionSummaryBoard> {
             ],
           ))
     ]);
-  }
-}
-
-class TransactionBoard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Stack(
-      children: <Widget>[
-        TransactionSummaryBoard(),
-      ],
-    ));
   }
 }

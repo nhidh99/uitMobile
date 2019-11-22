@@ -6,9 +6,6 @@ import 'package:money_grower/ui/dept_screen/dept_screen.dart';
 import 'package:money_grower/ui/statistics_screen/statistics_screen.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_screen.dart';
 import 'package:async_loader/async_loader.dart';
-import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
-
-import 'blocs/transaction_bloc.dart';
 import 'blocs/user_bloc.dart';
 import 'models/user_model.dart';
 
@@ -21,12 +18,6 @@ class SimpleNoteApp extends StatelessWidget {
   init() async {
     final userBloc = UserBloc();
     await userBloc.getUserByUsername('nhidh99');
-
-    final transactionBloc = TransactionBloc();
-    final summary = TransactionSummary();
-    final response = await transactionBloc
-      .getTransactionSummaryOfMonth(DateTime.now(), 'nhidh99');
-    summary.fromMap(response);
   }
 
   @override

@@ -1,4 +1,3 @@
-import 'package:money_grower/models/transaction_model.dart';
 
 class TransactionSummary {
   int totalIncome;
@@ -6,7 +5,7 @@ class TransactionSummary {
   int totalTransaction;
   List incomeList;
   List expenseList;
-  DateTime date;
+  DateTime date = DateTime.now();
 
   static final TransactionSummary _instance = TransactionSummary._internal();
   TransactionSummary._internal();
