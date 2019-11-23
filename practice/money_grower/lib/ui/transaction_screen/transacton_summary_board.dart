@@ -24,7 +24,10 @@ class TransactionSummaryBoard extends StatelessWidget {
                       color: Colors.green)),
               Spacer(),
               Text(formatter.formatMoney(summary.totalIncome),
-                  style: TextStyle(fontSize: 18, color: Colors.green)),
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green)),
             ],
           )),
 
@@ -43,7 +46,10 @@ class TransactionSummaryBoard extends StatelessWidget {
                       color: Colors.redAccent)),
               Spacer(),
               Text(formatter.formatMoney(summary.totalExpense),
-                  style: TextStyle(fontSize: 18, color: Colors.redAccent))
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.redAccent))
             ],
           )),
 
@@ -62,7 +68,10 @@ class TransactionSummaryBoard extends StatelessWidget {
                       color: Colors.blue)),
               Spacer(),
               Text(formatter.formatMoney(summary.totalTransaction),
-                  style: TextStyle(fontSize: 18, color: Colors.blue))
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue))
             ],
           ))
     ]);

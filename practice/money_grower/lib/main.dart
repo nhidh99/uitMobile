@@ -82,6 +82,7 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   int screenIndex = 0;
+  final user = UserModel();
   final List<Widget> screenList = [
     TransactionScreen(),
     DeptScreen(),

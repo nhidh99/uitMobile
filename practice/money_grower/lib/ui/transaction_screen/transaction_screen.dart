@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:money_grower/blocs/transaction_bloc.dart';
+import 'package:money_grower/models/user_model.dart';
+import 'package:money_grower/ui/transaction_screen/transaction_detail_pane.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 import 'package:money_grower/ui/transaction_screen/transacton_summary_board.dart';
-import 'package:month_picker_strip/month_picker_strip.dart';
+import 'package:money_grower/ui/custom_control/month_picker.dart';
 
 class TransactionScreen extends StatefulWidget {
   @override
@@ -10,45 +12,21 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class TransactionScreenState extends State<TransactionScreen> {
-
   final summary = TransactionSummary();
   final transactionBloc = TransactionBloc();
+  final username = UserModel().username;
 
   Future loadSummaryTransaction() async {
     final date = summary.date;
     final response =
-        await transactionBloc.getTransactionSummaryOfMonth(date, 'nhidh99');
+        await transactionBloc.getTransactionSummaryOfMonth(date, username);
     return summary.fromMap(response);
   }
 
-  // ignore: non_constant_identifier_names
-  Widget MonthPicker(bool isDisable) {
-    return AbsorbPointer(
-        absorbing: isDisable,
-        child: Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(width: 1.0, color: Colors.black12)),
-                color: Colors.white),
-            padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-            child: MonthStrip(
-              format: 'MM/yyyy',
-              from: new DateTime(1900, 4),
-              to: new DateTime(2100, 5),
-              initialMonth: summary.date,
-              height: 48.0,
-              viewportFraction: 0.33,
-              onMonthChanged: (newMonth) {
-                setState(() {
-                  summary.date = newMonth;
-                });
-              },
-              normalTextStyle: TextStyle(fontSize: 18, color: Colors.black26),
-              selectedTextStyle: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green),
-            )));
+  void reloadSummary(DateTime date) {
+    setState(() {
+      summary.date = date;
+    });
   }
 
   @override
@@ -64,7 +42,7 @@ class TransactionScreenState extends State<TransactionScreen> {
             case ConnectionState.waiting:
               return Column(
                 children: <Widget>[
-                  MonthPicker(true),
+                  MonthStriper(summary.date, true),
                   SizedBox(height: 40),
                   Center(child: CircularProgressIndicator())
                 ],
@@ -77,16 +55,10 @@ class TransactionScreenState extends State<TransactionScreen> {
                     appBar: PreferredSize(
                         preferredSize: Size.fromHeight(205),
                         child: Column(children: <Widget>[
-                          MonthPicker(false),
+                          MonthStriper(summary.date, false, reloadSummary),
                           TransactionSummaryBoard()
                         ])),
-                    body: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Column(children: <Widget>[
-                          TransactionSummaryBoard(),
-                          TransactionSummaryBoard(),
-                          TransactionSummaryBoard()
-                        ])),
+                    body: TransactionDetailBoard(),
                     floatingActionButton: FloatingActionButton(
                       child: Icon(Icons.add),
                       onPressed: () {},
@@ -96,5 +68,38 @@ class TransactionScreenState extends State<TransactionScreen> {
           }
           return null; // unreachable
         });
+  }
+}
+
+class TransactionDetailBoard extends StatelessWidget {
+  final dateList = TransactionSummary()
+      .transactionList
+      .map((transaction) => transaction.date)
+      .toSet()
+      .toList()
+        ..sort((b, a) => a.compareTo(b));
+
+  @override
+  Widget build(BuildContext context) {
+    if (dateList.isNotEmpty) {
+      return ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: dateList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return new TransactionDetailPane(dateList[index]);
+        },
+      );
+    } else {
+      return Center(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+            SizedBox(height: 10),
+            Text(":-)", style: TextStyle(fontSize: 48, color: Colors.black45)),
+            SizedBox(height: 15),
+            Text("Không có giao dịch",
+                style: TextStyle(fontSize: 24, color: Colors.black45)),
+          ]));
+    }
   }
 }

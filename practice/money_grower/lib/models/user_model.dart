@@ -26,5 +26,3 @@ class UserModel {
     };
   }
 }
-
-final user = UserModel();
