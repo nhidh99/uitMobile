@@ -5,6 +5,7 @@ import 'package:money_grower/ui/budget_screen/budget_screen.dart';
 import 'package:money_grower/ui/dept_screen/dept_screen.dart';
 import 'package:money_grower/ui/statistics_screen/statistics_screen.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_screen.dart';
+import 'package:money_grower/ui/welcome_screen/welcome_page.dart';
 
 void main() => runApp(SimpleNoteApp());
 
@@ -13,7 +14,7 @@ class SimpleNoteApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: "Simple Note",
-      home: new NoteScreen(),
+      home: new WelcomePage(),
       theme: ThemeData(
           // Define the default brightness and colors.
           primaryColor: Colors.green,
