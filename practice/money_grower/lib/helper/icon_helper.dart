@@ -5,9 +5,13 @@ class IconHelper {
   IconData getIconByName(String name) {
     switch (name) {
       case "Ăn uống": return Icons.free_breakfast;
-      case "Thưởng": return Icons.monetization_on;
+      case "Giải trí": return Icons.videogame_asset;
+      case "Thưởng": return Icons.attach_money;
       case "Tiền lãi": return Icons.monetization_on;
-      case "Bạn bè:": return Icons.people;
+      case "Lương": return Icons.credit_card;
+      case "Được tặng": return Icons.card_giftcard;
+      case "Bán đồ": return Icons.work;
+      case "Bạn bè": return Icons.people;
       case "Chi phí": return Icons.account_balance_wallet;
       case "Di chuyển": return Icons.directions_bus;
       case "Du lịch": return Icons.airplanemode_active;
@@ -21,7 +25,7 @@ class IconHelper {
       case "Bảo hiểm": return Icons.healing;
       case "Cho vay": return Icons.money_off;
       case "Trả nợ": return Icons.money_off;
-      case "Mượn tiền": return Icons.attach_money;
+      case "Vay tiền": return Icons.attach_money;
       case "Thu nợ": return Icons.attach_money;
     }
     return null;

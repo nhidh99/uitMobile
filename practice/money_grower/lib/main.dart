@@ -105,7 +105,7 @@ class MainScreenState extends State<MainScreen> {
                 Text("Tổng cộng:",
                     style: TextStyle(fontSize: 14, color: Colors.black54)),
                 SizedBox(height: 2),
-                Text(FormatHelper().formatMoney(user.income - user.outgoings)),
+                Text(FormatHelper().formatMoney(user.income - user.outgoings, "đ")),
               ],
             )
           ],

@@ -33,7 +33,7 @@ Widget TransactionDetailCard(TransactionModel transaction) {
                 ],
               ),
               Spacer(),
-              Text(FormatHelper().formatMoney(transaction.price.abs()),
+              Text(FormatHelper().formatMoney(transaction.price.abs(), 'đ'),
                   style: TextStyle(
                       color: transaction.price < 0
                           ? Colors.redAccent

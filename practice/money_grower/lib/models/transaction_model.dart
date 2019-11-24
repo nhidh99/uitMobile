@@ -1,3 +1,5 @@
+import 'package:money_grower/models/user_model.dart';
+
 class TransactionModel {
   String id;
   String name;
@@ -5,7 +7,7 @@ class TransactionModel {
   DateTime date;
   int price;
 
-  TransactionModel(this.id, this.name, this.note, this.price);
+  TransactionModel(this.id, this.name, this.note, this.price, this.date);
 
   TransactionModel.fromMap(Map snapshot, String id) {
     this.id = id;
@@ -18,9 +20,12 @@ class TransactionModel {
 
   toJson() {
     return {
+      "date-day": date.day,
+      "date-month": date.month,
+      "date-year": date.year,
+      "username": UserModel().username,
       "name": name,
       "note": note,
-      "date": date,
       "price": price
     };
   }

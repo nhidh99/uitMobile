@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/models/user_model.dart';
+import 'package:money_grower/ui/transaction_screen/transaction_add_popup.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_detail_pane.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 import 'package:money_grower/ui/transaction_screen/transacton_summary_board.dart';
@@ -61,7 +62,15 @@ class TransactionScreenState extends State<TransactionScreen> {
                     body: TransactionDetailBoard(),
                     floatingActionButton: FloatingActionButton(
                       child: Icon(Icons.add),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TransactionAddPopup(),
+                                fullscreenDialog: true
+                            )
+                        );
+                      },
                     ),
                     floatingActionButtonLocation:
                         FloatingActionButtonLocation.centerFloat);
@@ -95,7 +104,11 @@ class TransactionDetailBoard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
             SizedBox(height: 10),
-            Text(":-)", style: TextStyle(fontSize: 48, color: Colors.black45)),
+            Text(":-)",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 48,
+                    color: Colors.black45)),
             SizedBox(height: 15),
             Text("Không có giao dịch",
                 style: TextStyle(fontSize: 24, color: Colors.black45)),

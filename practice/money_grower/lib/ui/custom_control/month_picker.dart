@@ -25,7 +25,6 @@ class MonthStriper extends StatelessWidget {
           from: new DateTime(1900, 4),
           to: new DateTime(2100, 5),
           initialMonth: date,
-          height: 48.0,
           viewportFraction: 0.33,
           onMonthChanged: (newMonth) {
             if (callback != null) {

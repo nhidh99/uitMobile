@@ -23,7 +23,7 @@ class TransactionSummaryBoard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.green)),
               Spacer(),
-              Text(formatter.formatMoney(summary.totalIncome),
+              Text(formatter.formatMoney(summary.totalIncome, 'đ'),
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -45,7 +45,7 @@ class TransactionSummaryBoard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.redAccent)),
               Spacer(),
-              Text(formatter.formatMoney(summary.totalExpense),
+              Text(formatter.formatMoney(summary.totalExpense, 'đ'),
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ class TransactionSummaryBoard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.blue)),
               Spacer(),
-              Text(formatter.formatMoney(summary.totalTransaction),
+              Text(formatter.formatMoney(summary.totalTransaction, 'đ'),
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

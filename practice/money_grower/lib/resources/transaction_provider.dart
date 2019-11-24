@@ -35,4 +35,8 @@ class TransactionProvider {
       'date': date
     };
   }
+
+  Future insertTransaction(TransactionModel transaction) async {
+    await doc.ref.add(transaction.toJson());
+  }
 }

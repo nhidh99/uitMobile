@@ -76,7 +76,7 @@ class TransactionDetailPane extends StatelessWidget {
                 ],
               ),
               Spacer(),
-              Text(FormatHelper().formatMoney(totalPrice.abs()),
+              Text(FormatHelper().formatMoney(totalPrice.abs(), 'đ'),
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,

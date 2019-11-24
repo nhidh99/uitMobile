@@ -1,10 +1,13 @@
 import 'package:intl/intl.dart';
 
 class FormatHelper {
-  String unit = "đ";
-
-  formatMoney(int value) {
-      final formatter = NumberFormat("#,###");
-      return formatter.format(value) + unit;
+  formatMoney(int value, [String unit]) {
+    if (value == null) {
+      return "";
+    }
+    final formatter = NumberFormat("#,###");
+    var output = formatter.format(value);
+    if (unit != null) output += unit;
+    return output;
   }
 }

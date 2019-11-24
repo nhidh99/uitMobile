@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:money_grower/models/transaction_model.dart';
 import 'package:money_grower/resources/transaction_provider.dart';
 import 'package:money_grower/resources/user_provider.dart';
 import '../models/user_model.dart';
@@ -18,4 +19,7 @@ class Repository {
 
   Future getTransactionSummaryOfMonth(DateTime date, String username) =>
       transactionProvider.getTransactionSummaryOfMonth(date, username);
+
+  insertTransaction(TransactionModel transaction) =>
+    transactionProvider.insertTransaction(transaction);
 }

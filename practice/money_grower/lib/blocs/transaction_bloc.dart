@@ -1,3 +1,4 @@
+import 'package:money_grower/models/transaction_model.dart';
 import 'package:money_grower/resources/repository.dart';
 
 class TransactionBloc {
@@ -5,4 +6,7 @@ class TransactionBloc {
 
   Future getTransactionSummaryOfMonth(DateTime date, String username) =>
     repository.getTransactionSummaryOfMonth(date, username);
+
+  Future insertTransaction(TransactionModel transaction) =>
+    repository.insertTransaction(transaction);
 }
