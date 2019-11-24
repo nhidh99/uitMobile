@@ -5,7 +5,7 @@ import 'package:money_grower/ui/transaction_screen/transaction_add_popup.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_detail_pane.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 import 'package:money_grower/ui/transaction_screen/transacton_summary_board.dart';
-import 'package:money_grower/ui/custom_control/month_picker.dart';
+import 'package:money_grower/ui/custom_control/month_striper.dart';
 
 class TransactionScreen extends StatefulWidget {
   @override
@@ -54,7 +54,7 @@ class TransactionScreenState extends State<TransactionScreen> {
               else
                 return Scaffold(
                     appBar: PreferredSize(
-                        preferredSize: Size.fromHeight(205),
+                        preferredSize: Size.fromHeight(200),
                         child: Column(children: <Widget>[
                           MonthStriper(summary.date, false, reloadSummary),
                           TransactionSummaryBoard()

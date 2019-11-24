@@ -19,7 +19,6 @@ class MonthStriper extends StatelessWidget {
           border:
           Border(bottom: BorderSide(width: 1.0, color: Colors.black26)),
           color: Colors.white),
-        padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
         child: MonthStrip(
           format: 'MM/yyyy',
           from: new DateTime(1900, 4),

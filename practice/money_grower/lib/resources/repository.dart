@@ -11,8 +11,7 @@ class Repository {
   Future getUserByUsername(String username) =>
       userProvider.getUserByUsername(username);
 
-  Future insertUser(UserModel data) =>
-    userProvider.insertUser(data);
+  Future insertUser(UserModel data) => userProvider.insertUser(data);
 
   Future updateUser(UserModel data, String id) =>
       userProvider.updateUser(data, id);
@@ -20,6 +19,12 @@ class Repository {
   Future getTransactionSummaryOfMonth(DateTime date, String username) =>
       transactionProvider.getTransactionSummaryOfMonth(date, username);
 
-  insertTransaction(TransactionModel transaction) =>
-    transactionProvider.insertTransaction(transaction);
+  Future insertTransaction(TransactionModel transaction) =>
+      transactionProvider.insertTransaction(transaction);
+
+  Future deleteTransaction(String id) =>
+      transactionProvider.deleteTransaction(id);
+
+  updateTransaction(TransactionModel transaction) =>
+      transactionProvider.updateTransaction(transaction);
 }

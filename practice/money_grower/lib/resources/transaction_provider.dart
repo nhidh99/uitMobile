@@ -21,8 +21,7 @@ class TransactionProvider {
       final price = doc.data['price'];
       if (price > 0) {
         totalIncome += price;
-      }
-      else {
+      } else {
         totalExpense -= price;
       }
     });
@@ -38,5 +37,13 @@ class TransactionProvider {
 
   Future insertTransaction(TransactionModel transaction) async {
     await doc.ref.add(transaction.toJson());
+  }
+
+  Future deleteTransaction(String id) async {
+    await doc.ref.document(id).delete();
+  }
+
+  Future updateTransaction(TransactionModel transaction) async {
+    await doc.ref.document(transaction.id).updateData(transaction.toJson());
   }
 }
