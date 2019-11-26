@@ -37,6 +37,8 @@ dev_dependencies:
   intl: ^0.15.5
   month_picker_strip: ^0.0.3
   datetime_picker_formfield: ^0.4.3
+  charts_flutter: ^0.8.1
+  random_color: ^1.0.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -8,8 +8,9 @@ import 'package:money_grower/ui/transaction_screen/transaction_edit_popup.dart';
 // ignore: non_constant_identifier_names
 class TransactionDetailCard extends StatelessWidget {
   TransactionModel transaction;
+  bool isBoldPrice = true;
 
-  TransactionDetailCard(this.transaction);
+  TransactionDetailCard(this.transaction, [this.isBoldPrice]);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,9 @@ class TransactionDetailCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Colors.black87)),
                     SizedBox(height: 2),
-                    Text(transaction.note)
+                    transaction.note.isNotEmpty
+                        ? Text(transaction.note)
+                        : SizedBox.shrink()
                   ],
                 ),
                 Spacer(),
@@ -49,7 +52,9 @@ class TransactionDetailCard extends StatelessWidget {
                         color: transaction.price < 0
                             ? Colors.redAccent
                             : Colors.green,
-                        fontSize: 18))
+                        fontSize: 18,
+                        fontWeight:
+                            isBoldPrice ? FontWeight.bold : FontWeight.normal))
               ],
             )));
   }

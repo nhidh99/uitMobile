@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/models/user_model.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_add_popup.dart';
-import 'package:money_grower/ui/transaction_screen/transaction_detail_pane.dart';
+import 'package:money_grower/ui/transaction_screen/transaction_detail_board.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 import 'package:money_grower/ui/transaction_screen/transacton_summary_board.dart';
 import 'package:money_grower/ui/custom_control/month_striper.dart';
@@ -67,9 +67,7 @@ class TransactionScreenState extends State<TransactionScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => TransactionAddPopup(),
-                                fullscreenDialog: true
-                            )
-                        );
+                                fullscreenDialog: true));
                       },
                     ),
                     floatingActionButtonLocation:
@@ -77,42 +75,5 @@ class TransactionScreenState extends State<TransactionScreen> {
           }
           return null; // unreachable
         });
-  }
-}
-
-class TransactionDetailBoard extends StatelessWidget {
-  final dateList = TransactionSummary()
-      .transactionList
-      .map((transaction) => transaction.date)
-      .toSet()
-      .toList()
-        ..sort((b, a) => a.compareTo(b));
-
-  @override
-  Widget build(BuildContext context) {
-    if (dateList.isNotEmpty) {
-      return ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: dateList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return new TransactionDetailPane(dateList[index]);
-        },
-      );
-    } else {
-      return Center(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-            SizedBox(height: 10),
-            Text(":-)",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 48,
-                    color: Colors.black45)),
-            SizedBox(height: 15),
-            Text("Không có giao dịch",
-                style: TextStyle(fontSize: 24, color: Colors.black45)),
-          ]));
-    }
   }
 }
