@@ -8,6 +8,7 @@ import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/transaction_model.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_category_page.dart';
 
+// ignore: must_be_immutable
 class TransactionEditPopup extends StatefulWidget {
   TransactionModel transaction;
 

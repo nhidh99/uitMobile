@@ -5,7 +5,7 @@ import 'package:money_grower/helper/icon_helper.dart';
 import 'package:money_grower/models/transaction_model.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_edit_popup.dart';
 
-// ignore: non_constant_identifier_names
+// ignore: non_constant_identifier_names, must_be_immutable
 class TransactionDetailCard extends StatelessWidget {
   TransactionModel transaction;
   bool isBoldPrice = true;

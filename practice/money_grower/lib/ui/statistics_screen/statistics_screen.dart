@@ -3,7 +3,6 @@ import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/models/transaction_model.dart';
 import 'package:money_grower/models/user_model.dart';
 import 'package:money_grower/ui/custom_control/month_striper.dart';
-import 'package:money_grower/ui/statistics_screen/statistics_chart.dart';
 import 'package:money_grower/ui/statistics_screen/statistics_board.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 import 'package:money_grower/ui/transaction_screen/transacton_summary_board.dart';

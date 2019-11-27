@@ -30,3 +30,37 @@ class TransactionModel {
     };
   }
 }
+
+class DebtTransactionModel extends TransactionModel {
+  bool done = false;
+
+  DebtTransactionModel(
+      String id, String name, String note, int price, DateTime date)
+      : super(id, name, note, price, date);
+
+  @override
+  DebtTransactionModel.fromMap(Map snapshot, String id)
+      : super(
+            id,
+            snapshot['name'],
+            snapshot['note'],
+            snapshot['price'],
+            DateTime(snapshot['date-year'], snapshot['date-month'],
+                snapshot['date-day'])) {
+    this.done = snapshot['done'];
+  }
+
+  @override
+  toJson() {
+    return {
+      "date-day": date.day,
+      "date-month": date.month,
+      "date-year": date.year,
+      "username": UserModel().username,
+      "name": name,
+      "note": note,
+      "price": price,
+      "done": done
+    };
+  }
+}

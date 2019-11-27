@@ -26,6 +26,8 @@ class TransactionProvider {
       }
     });
 
+    transactionList.sort((a, b) => a.name.compareTo(b.name));
+
     return {
       'total-income': totalIncome,
       'total-expense': totalExpense,
@@ -33,6 +35,22 @@ class TransactionProvider {
       'transaction-list': transactionList,
       'date': date
     };
+  }
+
+  Future getLoanList(String username) async {
+    var loanList = [];
+
+    final response = await doc.ref
+      .where('username', isEqualTo: username)
+      .where('name', isEqualTo: 'Cho vay')
+      .where('done', isEqualTo: false)
+      .getDocuments();
+
+    response.documents.forEach((doc) =>
+      loanList.add(DebtTransactionModel.fromMap(doc.data, doc.documentID)));
+
+    loanList.sort((a, b) => b.date.compareTo(a.date));
+    return loanList;
   }
 
   Future insertTransaction(TransactionModel transaction) async {

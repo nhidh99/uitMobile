@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/ui/budget_screen/budget_screen.dart';
-import 'package:money_grower/ui/dept_screen/dept_screen.dart';
+import 'package:money_grower/ui/debt_screen/debt_screen.dart';
 import 'package:money_grower/ui/statistics_screen/statistics_screen.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_screen.dart';
 import 'package:async_loader/async_loader.dart';
@@ -85,7 +85,7 @@ class MainScreenState extends State<MainScreen> {
   final user = UserModel();
   final List<Widget> screenList = [
     TransactionScreen(),
-    DeptScreen(),
+    DebtScreen(),
     StatisticsScreen(),
     BudgetScreen()
   ];

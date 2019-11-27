@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:money_grower/ui/cards/transaction_date_card.dart';
-import 'package:money_grower/ui/cards/transaction_detail_card.dart';
+import 'package:money_grower/ui/custom_control/transaction_date_card.dart';
+import 'package:money_grower/ui/custom_control/transaction_detail_card.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 
 // ignore: must_be_immutable
