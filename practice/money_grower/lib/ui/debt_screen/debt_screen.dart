@@ -9,20 +9,25 @@ class DebtScreen extends StatefulWidget {
   State<StatefulWidget> createState() => DebtScreenState();
 }
 
-class DebtScreenState extends State<DebtScreen>
-    with AutomaticKeepAliveClientMixin {
+class DebtScreenState extends State<DebtScreen> {
   List loanList;
+  List debtList;
   int totalLoanPrice;
+  int totalDebtPrice;
+  static int curTabIndex = 1;
 
   Future loadDebtAndLoanList() async {
+    final loanDebtList = await TransactionBloc().getLoanDebtList(UserModel().username);
     totalLoanPrice = 0;
-    loanList = await TransactionBloc().getLoanList(UserModel().username);
+    totalDebtPrice = 0;
+    loanList = loanDebtList['loan-list'];
+    debtList = loanDebtList['debt-list'];
     loanList.forEach((loan) => totalLoanPrice += loan.price);
+    debtList.forEach((debt) => totalDebtPrice += debt.price);
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return FutureBuilder(
         future: loadDebtAndLoanList(),
         // a previously-obtained Future<String> or null
@@ -44,7 +49,7 @@ class DebtScreenState extends State<DebtScreen>
                 return Center(child: Text("Lỗi kết nối"));
               else
                 return DefaultTabController(
-                    initialIndex: 1,
+                    initialIndex: curTabIndex,
                     length: 2,
                     child: Scaffold(
                       appBar: PreferredSize(
@@ -87,7 +92,7 @@ class DebtScreenState extends State<DebtScreen>
                                 padding: EdgeInsets.only(top: 20, bottom: 10),
                                 child: Center(
                                     child: Text(
-                                        "DANH SÁCH CHO VAY | " +
+                                        "DANH SÁCH VAY | " +
                                             FormatHelper().formatMoney(
                                                 -totalLoanPrice, 'đ'),
                                         style: TextStyle(
@@ -98,19 +103,22 @@ class DebtScreenState extends State<DebtScreen>
                               Divider(color: Colors.black38),
                               LoanBoard(loanList)
                             ]),
-                            SingleChildScrollView(
-                                child: Column(children: <Widget>[
+                            Column(children: <Widget>[
                               Container(
-                                padding: EdgeInsets.only(top: 20),
-                                color: Colors.white,
+                                padding: EdgeInsets.only(top: 20, bottom: 10),
                                 child: Center(
-                                    child: Text("DANH SÁCH KHOẢN NỢ",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.redAccent))),
+                                  child: Text(
+                                    "DANH SÁCH NỢ | " +
+                                      FormatHelper().formatMoney(
+                                        totalDebtPrice, 'đ'),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.redAccent))),
                               ),
-                            ]))
+                              Divider(color: Colors.black38),
+                              DebtBoard(debtList)
+                            ])
                           ],
                         ),
                       ),
@@ -118,9 +126,47 @@ class DebtScreenState extends State<DebtScreen>
           }
         });
   }
+}
+
+class DebtBoard extends StatelessWidget {
+  final debtList;
+
+  DebtBoard(this.debtList);
 
   @override
-  bool get wantKeepAlive => true;
+  Widget build(BuildContext context) {
+    DebtScreenState.curTabIndex = 1;
+    if (debtList.isEmpty) {
+      return Container(
+        padding: EdgeInsets.only(top: 20),
+        color: Colors.white,
+        height: 200,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Center(
+              child: Text(":-)",
+                style: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black45))),
+            SizedBox(height: 15),
+            Center(
+              child: Text("Không có khoản vay",
+                style: TextStyle(fontSize: 24, color: Colors.black45)))
+          ],
+        ));
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: debtList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Column(children: <Widget>[
+          TransactionLoanCard(debtList[index], true),
+          Divider(color: Colors.black38),
+        ]);
+      });
+  }
 }
 
 class LoanBoard extends StatelessWidget {
@@ -130,6 +176,28 @@ class LoanBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DebtScreenState.curTabIndex = 0;
+    if (loanList.isEmpty) {
+      return Container(
+        padding: EdgeInsets.only(top: 20),
+        color: Colors.white,
+        height: 200,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Center(
+              child: Text(":-)",
+                style: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black45))),
+            SizedBox(height: 15),
+            Center(
+              child: Text("Không có khoản vay",
+                style: TextStyle(fontSize: 24, color: Colors.black45)))
+          ],
+        ));
+    }
     return ListView.builder(
         shrinkWrap: true,
         itemCount: loanList.length,

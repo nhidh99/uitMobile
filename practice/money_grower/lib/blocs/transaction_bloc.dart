@@ -7,7 +7,7 @@ class TransactionBloc {
   Future getTransactionSummaryOfMonth(DateTime date, String username) =>
       repository.getTransactionSummaryOfMonth(date, username);
 
-  Future getLoanList(String username) => repository.getLoanList(username);
+  Future getLoanDebtList(String username) => repository.getLoanDebtList(username);
 
   Future insertTransaction(TransactionModel transaction) =>
       repository.insertTransaction(transaction);

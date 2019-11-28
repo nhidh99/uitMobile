@@ -59,7 +59,9 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
                 CupertinoDialogAction(
                     isDefaultAction: true,
                     child: Text("Xác nhận",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent)),
                     onPressed: () {
                       TransactionBloc()
                           .deleteTransaction(widget.transaction.id);
@@ -68,8 +70,7 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
                     }),
                 CupertinoDialogAction(
                     isDefaultAction: true,
-                    child: Text("Huỷ bỏ",
-                        style: TextStyle(color: Colors.redAccent)),
+                    child: Text("Huỷ bỏ"),
                     onPressed: () => Navigator.of(context).pop())
               ],
             ));
@@ -114,8 +115,15 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
 
       final price = int.parse(priceText);
       final date = DateFormat("dd/MM/yyyy").parse(dateText);
-      final transaction = TransactionModel(widget.transaction.id, name, note,
-          isIncomeTransaction ? price : -price, date);
+      var transaction;
+
+      if (['Cho vay', 'Vay tiền'].contains(name)) {
+        transaction = DebtTransactionModel(widget.transaction.id, name, note,
+            isIncomeTransaction ? price : -price, date);
+      } else {
+        transaction = TransactionModel(widget.transaction.id, name, note,
+            isIncomeTransaction ? price : -price, date);
+      }
       TransactionBloc().updateTransaction(transaction);
       Navigator.of(context).pop();
     }

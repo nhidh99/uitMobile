@@ -57,7 +57,7 @@ class StatisticsBoard extends StatelessWidget {
       children: <Widget>[
         Container(
             color: Colors.white,
-            child: SizedBox(height: 260, child: DonutPieChart(list))),
+            child: SizedBox(height: 270, child: DonutPieChart(list))),
         AbsorbPointer(
             absorbing: true,
             child: ListView.builder(

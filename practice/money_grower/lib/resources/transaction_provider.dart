@@ -37,20 +37,28 @@ class TransactionProvider {
     };
   }
 
-  Future getLoanList(String username) async {
+  Future getLoanDebtList(String username) async {
     var loanList = [];
+    var debtList = [];
 
     final response = await doc.ref
-      .where('username', isEqualTo: username)
-      .where('name', isEqualTo: 'Cho vay')
-      .where('done', isEqualTo: false)
-      .getDocuments();
+        .where('username', isEqualTo: username)
+        .where('done', isEqualTo: false)
+        .getDocuments();
 
-    response.documents.forEach((doc) =>
-      loanList.add(DebtTransactionModel.fromMap(doc.data, doc.documentID)));
+    response.documents.forEach((doc) {
+      final transaction =
+          DebtTransactionModel.fromMap(doc.data, doc.documentID);
+      if (transaction.name == 'Cho vay') {
+        loanList.add(transaction);
+      } else {
+        debtList.add(transaction);
+      }
+    });
 
     loanList.sort((a, b) => b.date.compareTo(a.date));
-    return loanList;
+    debtList.sort((a, b) => b.date.compareTo(a.date));
+    return {'loan-list': loanList, 'debt-list': debtList};
   }
 
   Future insertTransaction(TransactionModel transaction) async {

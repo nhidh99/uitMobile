@@ -19,7 +19,8 @@ class Repository {
   Future getTransactionSummaryOfMonth(DateTime date, String username) =>
       transactionProvider.getTransactionSummaryOfMonth(date, username);
 
-  Future getLoanList(String username) => transactionProvider.getLoanList(username);
+  Future getLoanDebtList(String username) =>
+      transactionProvider.getLoanDebtList(username);
 
   Future insertTransaction(TransactionModel transaction) =>
       transactionProvider.insertTransaction(transaction);

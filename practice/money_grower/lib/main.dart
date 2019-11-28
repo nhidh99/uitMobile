@@ -81,8 +81,16 @@ class MainScreen extends StatefulWidget {
 }
 
 class MainScreenState extends State<MainScreen> {
-  int screenIndex = 0;
+  final pageController = PageController();
   final user = UserModel();
+  int screenIndex = 0;
+
+  void onPageChanged(int index) {
+    setState(() {
+      screenIndex = index;
+    });
+  }
+
   final List<Widget> screenList = [
     TransactionScreen(),
     DebtScreen(),
@@ -119,11 +127,15 @@ class MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
-      body: screenList[screenIndex],
+      body: PageView(
+        children: screenList,
+        controller: pageController,
+        onPageChanged: onPageChanged,
+      ),  //screenList[screenIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: screenIndex,
-        onTap: (newIndex) => setState(() => screenIndex = newIndex),
+        onTap: (newIndex) => pageController.jumpToPage(newIndex),
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.account_balance_wallet, color: Colors.green),
