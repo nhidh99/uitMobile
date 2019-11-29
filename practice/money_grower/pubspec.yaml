@@ -39,6 +39,7 @@ dev_dependencies:
   datetime_picker_formfield: ^0.4.3
   charts_flutter: ^0.8.1
   random_color: ^1.0.3
+  percent_indicator: ^2.1.1+1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

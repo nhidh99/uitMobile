@@ -61,6 +61,7 @@ class TransactionScreenState extends State<TransactionScreen> {
                         ])),
                     body: TransactionDetailBoard(),
                     floatingActionButton: FloatingActionButton(
+                      heroTag: 'btn-transaction',
                       child: Icon(Icons.add),
                       onPressed: () {
                         Navigator.push(

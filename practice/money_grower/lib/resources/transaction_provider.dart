@@ -37,6 +37,22 @@ class TransactionProvider {
     };
   }
 
+  Future getPriceOfTransactionTypeInTime(String name, DateTime beginDate,
+      DateTime endDate, String username) async {
+    final response = await doc.ref
+        .where('username', isEqualTo: username)
+        .where('name', isEqualTo: name)
+        .where('date', isGreaterThanOrEqualTo: beginDate)
+        .where('date', isLessThanOrEqualTo: endDate)
+        .getDocuments();
+
+    if (response.documents.isEmpty) return 0;
+    final totalPrice = response.documents
+        .map((doc) => doc.data['price'])
+        .reduce((a, b) => a + b);
+    return totalPrice.abs();
+  }
+
   Future getLoanDebtList(String username) async {
     var loanList = [];
     var debtList = [];
