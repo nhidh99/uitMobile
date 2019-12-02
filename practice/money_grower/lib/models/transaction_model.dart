@@ -14,7 +14,8 @@ class TransactionModel {
     this.name = snapshot['name'];
     this.note = snapshot['note'];
     this.price = snapshot['price'];
-    this.date = DateTime.fromMillisecondsSinceEpoch(snapshot['date'].seconds * 1000);
+    this.date =
+        DateTime.fromMillisecondsSinceEpoch(snapshot['date'].seconds * 1000);
   }
 
   toJson() {
@@ -44,8 +45,8 @@ class DebtTransactionModel extends TransactionModel {
             snapshot['name'],
             snapshot['note'],
             snapshot['price'],
-            DateTime(snapshot['date-year'], snapshot['date-month'],
-                snapshot['date-day'])) {
+            DateTime.fromMillisecondsSinceEpoch(
+                snapshot['date'].seconds * 1000)) {
     this.done = snapshot['done'];
   }
 
@@ -53,7 +54,6 @@ class DebtTransactionModel extends TransactionModel {
   toJson() {
     return {
       "date": date,
-      "date-day": date.day,
       "date-month": date.month,
       "date-year": date.year,
       "username": UserModel().username,

@@ -5,9 +5,8 @@ import 'package:random_color/random_color.dart';
 
 class DonutPieChart extends StatelessWidget {
   final List transactionList;
-  final bool animate;
 
-  DonutPieChart(this.transactionList, {this.animate});
+  DonutPieChart(this.transactionList);
 
   createSeriesList() {
     final formatter = FormatHelper();
@@ -38,7 +37,7 @@ class DonutPieChart extends StatelessWidget {
       return Text('null');
     }
     return charts.PieChart(createSeriesList(),
-      animate: animate,
+      animate: false,
       defaultRenderer:
       charts.ArcRendererConfig(arcWidth: 80, arcRendererDecorators: [
         charts.ArcLabelDecorator(labelPosition: charts.ArcLabelPosition.auto)

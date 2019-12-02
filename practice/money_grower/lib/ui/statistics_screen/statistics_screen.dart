@@ -6,6 +6,7 @@ import 'package:money_grower/ui/custom_control/month_striper.dart';
 import 'package:money_grower/ui/statistics_screen/statistics_board.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 import 'package:money_grower/ui/transaction_screen/transacton_summary_board.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 
 class StatisticsScreen extends StatefulWidget {
   @override
@@ -79,13 +80,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
               return Center(child: Text("Không có kết nối mạng"));
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Column(
-                children: <Widget>[
-                  MonthStriper(summary.date, true),
-                  SizedBox(height: 40),
-                  Center(child: CircularProgressIndicator())
-                ],
-              );
+              return JumpingDotsProgressIndicator(fontSize: 30);
             case ConnectionState.done:
               if (snapshot.hasError)
                 return Center(child: Text("Lỗi kết nối"));
@@ -115,8 +110,8 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                                   backgroundColor: Colors.white,
                                   title: TabBar(
                                     indicatorColor: Colors.black26,
-                                    indicatorPadding:
-                                        EdgeInsets.only(bottom: 5, left: 35, right: 35),
+                                    indicatorPadding: EdgeInsets.only(
+                                        bottom: 5, left: 35, right: 35),
                                     tabs: [
                                       Tab(
                                           icon: Text("KHOẢN THU",

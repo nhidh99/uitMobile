@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/user_model.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 
 import 'debt_board.dart';
 import 'loan_board.dart';
@@ -19,7 +20,8 @@ class DebtScreenState extends State<DebtScreen> {
   static int curTabIndex = 1;
 
   Future loadDebtAndLoanList() async {
-    final loanDebtList = await TransactionBloc().getLoanDebtList(UserModel().username);
+    final loanDebtList =
+        await TransactionBloc().getLoanDebtList(UserModel().username);
     totalLoanPrice = 0;
     totalDebtPrice = 0;
     loanList = loanDebtList['loan-list'];
@@ -40,12 +42,7 @@ class DebtScreenState extends State<DebtScreen> {
               return Center(child: Text("Không có kết nối mạng"));
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Column(
-                children: <Widget>[
-                  SizedBox(height: 30),
-                  Center(child: CircularProgressIndicator())
-                ],
-              );
+              return JumpingDotsProgressIndicator(fontSize: 30);
             case ConnectionState.done:
               if (snapshot.hasError)
                 return Center(child: Text("Lỗi kết nối"));
@@ -109,14 +106,14 @@ class DebtScreenState extends State<DebtScreen> {
                               Container(
                                 padding: EdgeInsets.only(top: 20, bottom: 10),
                                 child: Center(
-                                  child: Text(
-                                    "DANH SÁCH NỢ | " +
-                                      FormatHelper().formatMoney(
-                                        totalDebtPrice, 'đ'),
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.redAccent))),
+                                    child: Text(
+                                        "DANH SÁCH NỢ | " +
+                                            FormatHelper().formatMoney(
+                                                totalDebtPrice, 'đ'),
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.redAccent))),
                               ),
                               Divider(color: Colors.black38),
                               DebtBoard(debtList)

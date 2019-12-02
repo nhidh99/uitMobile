@@ -48,67 +48,73 @@ class DebtEditPopupState extends State<DebtEditPopup> {
   payLoan(DebtTransactionModel transaction) {
     if (transaction.price < 0) {
       showDialog(
-        context: context,
-        builder: (_) =>
-          CupertinoAlertDialog(
-            title: Text("Xác nhận thu tiền vay"),
-            content: Text(
-              "\nGiao dịch thu tiền sẽ tự động thêm vào danh sách giao dịch",
-              style: TextStyle(fontSize: 16)),
-            actions: [
-              CupertinoDialogAction(
-                isDefaultAction: true,
-                child: Text("Xác nhận",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent)),
-                onPressed: () {
-                  final payTransaction = TransactionModel(null, 'Thu nợ',
-                    'Thu tiền vay', transaction.price.abs(), DateTime.now());
-                  TransactionBloc().insertTransaction(payTransaction);
-                  transaction.done = true;
-                  TransactionBloc().updateTransaction(transaction);
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                }),
-              CupertinoDialogAction(
-                isDefaultAction: true,
-                child: Text("Huỷ bỏ"),
-                onPressed: () => Navigator.of(context).pop())
-            ],
-          ));
-    }
-    else {
+          context: context,
+          builder: (_) => CupertinoAlertDialog(
+                title: Text("Xác nhận thu tiền vay"),
+                content: Text(
+                    "\nGiao dịch thu tiền sẽ tự động thêm vào danh sách giao dịch",
+                    style: TextStyle(fontSize: 16)),
+                actions: [
+                  CupertinoDialogAction(
+                      isDefaultAction: true,
+                      child: Text("Xác nhận",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.redAccent)),
+                      onPressed: () {
+                        final payTransaction = TransactionModel(
+                            null,
+                            'Thu nợ',
+                            'Thu tiền vay',
+                            transaction.price.abs(),
+                            DateTime.now());
+                        TransactionBloc().insertTransaction(payTransaction);
+                        transaction.done = true;
+                        TransactionBloc().updateTransaction(transaction);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      }),
+                  CupertinoDialogAction(
+                      isDefaultAction: true,
+                      child: Text("Huỷ bỏ"),
+                      onPressed: () => Navigator.of(context).pop())
+                ],
+              ));
+    } else {
       showDialog(
-        context: context,
-        builder: (_) =>
-          CupertinoAlertDialog(
-            title: Text("Xác nhận trả nợ?"),
-            content: Text(
-              "\nGiao dịch trả nợ sẽ tự động thêm vào danh sách giao dịch",
-              style: TextStyle(fontSize: 16)),
-            actions: [
-              CupertinoDialogAction(
-                isDefaultAction: true,
-                child: Text("Xác nhận",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.redAccent)),
-                onPressed: () {
-                  final payTransaction = TransactionModel(null, 'Trả nợ',
-                    'Trả nợ', -transaction.price, DateTime.now());
-                  TransactionBloc().insertTransaction(payTransaction);
-                  transaction.done = true;
-                  TransactionBloc().updateTransaction(transaction);
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                }),
-              CupertinoDialogAction(
-                isDefaultAction: true,
-                child: Text("Huỷ bỏ"),
-                onPressed: () => Navigator.of(context).pop())
-            ],
-          ));
+          context: context,
+          builder: (_) => CupertinoAlertDialog(
+                title: Text("Xác nhận trả nợ?"),
+                content: Text(
+                    "\nGiao dịch trả nợ sẽ tự động thêm vào danh sách giao dịch",
+                    style: TextStyle(fontSize: 16)),
+                actions: [
+                  CupertinoDialogAction(
+                      isDefaultAction: true,
+                      child: Text("Xác nhận",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.redAccent)),
+                      onPressed: () {
+                        final now = DateTime.now();
+                        final payTransaction = TransactionModel(
+                            null,
+                            'Trả nợ',
+                            'Trả nợ',
+                            -transaction.price,
+                            DateTime(now.year, now.month, now.day));
+                        TransactionBloc().insertTransaction(payTransaction);
+                        transaction.done = true;
+                        TransactionBloc().updateTransaction(transaction);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      }),
+                  CupertinoDialogAction(
+                      isDefaultAction: true,
+                      child: Text("Huỷ bỏ"),
+                      onPressed: () => Navigator.of(context).pop())
+                ],
+              ));
     }
   }
 

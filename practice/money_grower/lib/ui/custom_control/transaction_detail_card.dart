@@ -5,6 +5,8 @@ import 'package:money_grower/helper/icon_helper.dart';
 import 'package:money_grower/models/transaction_model.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_edit_popup.dart';
 
+import 'faded_transition.dart';
+
 // ignore: non_constant_identifier_names, must_be_immutable
 class TransactionDetailCard extends StatelessWidget {
   TransactionModel transaction;
@@ -18,9 +20,7 @@ class TransactionDetailCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => TransactionEditPopup(transaction),
-                  fullscreenDialog: true));
+              FadeRoute(page: TransactionEditPopup(transaction)));
         },
         child: Container(
             padding: EdgeInsets.fromLTRB(16, 15, 20, 10),

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:money_grower/blocs/budget_bloc.dart';
 import 'package:money_grower/models/user_model.dart';
 import 'package:money_grower/ui/custom_control/budget_card.dart';
+import 'package:money_grower/ui/custom_control/faded_transition.dart';
 
 import 'budget_add_popup.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 
 class BudgetScreen extends StatefulWidget {
   @override
@@ -38,9 +40,7 @@ class BudgetScreenState extends State<BudgetScreen> {
               return Center(child: Text("Không có kết nối mạng"));
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Column(
-                children: <Widget>[Center(child: CircularProgressIndicator())],
-              );
+              return JumpingDotsProgressIndicator(fontSize: 30);
             case ConnectionState.done:
               if (snapshot.hasError)
                 return Center(child: Text("Lỗi kết nối"));
@@ -60,10 +60,7 @@ class BudgetScreenState extends State<BudgetScreen> {
                       child: Icon(Icons.add),
                       onPressed: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BudgetAddPopup(),
-                                fullscreenDialog: true));
+                            context, FadeRoute(page: BudgetAddPopup()));
                       },
                     ),
                     floatingActionButtonLocation:

@@ -117,7 +117,6 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
                 LengthLimitingTextInputFormatter(15),
                 WhitelistingTextInputFormatter.digitsOnly
               ],
-              autofocus: true,
               controller: priceTextController,
               onChanged: (text) => setPrice(text),
               style: TextStyle(fontSize: 24),

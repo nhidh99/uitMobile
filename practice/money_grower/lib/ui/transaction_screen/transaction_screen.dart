@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/models/user_model.dart';
+import 'package:money_grower/ui/custom_control/faded_transition.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_add_popup.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_detail_board.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 import 'package:money_grower/ui/transaction_screen/transacton_summary_board.dart';
 import 'package:money_grower/ui/custom_control/month_striper.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 
 class TransactionScreen extends StatefulWidget {
   @override
@@ -44,8 +46,8 @@ class TransactionScreenState extends State<TransactionScreen> {
               return Column(
                 children: <Widget>[
                   MonthStriper(summary.date, true),
-                  SizedBox(height: 40),
-                  Center(child: CircularProgressIndicator())
+                  SizedBox(height: 30),
+                  JumpingDotsProgressIndicator(fontSize: 20)
                 ],
               );
             case ConnectionState.done:
@@ -65,10 +67,7 @@ class TransactionScreenState extends State<TransactionScreen> {
                       child: Icon(Icons.add),
                       onPressed: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TransactionAddPopup(),
-                                fullscreenDialog: true));
+                            context, FadeRoute(page: TransactionAddPopup()));
                       },
                     ),
                     floatingActionButtonLocation:
