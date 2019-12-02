@@ -6,7 +6,10 @@ import 'package:money_grower/blocs/budget_bloc.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/helper/icon_helper.dart';
 import 'package:intl/intl.dart';
+import 'package:money_grower/ui/budget_screen/budget_edit_popup.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+
+import 'faded_transition.dart';
 
 class BudgetCard extends StatefulWidget {
   final budget;
@@ -37,8 +40,8 @@ class BudgetCardState extends State<BudgetCard> {
                             fontWeight: FontWeight.bold,
                             color: Colors.redAccent)),
                     onPressed: () async {
-                      await BudgetBloc().deleteBudget(id);
                       Navigator.of(context).pop();
+                      await BudgetBloc().deleteBudget(id);
                       widget.reloadBudgets();
                     }),
                 CupertinoDialogAction(
@@ -52,6 +55,10 @@ class BudgetCardState extends State<BudgetCard> {
   @override
   Widget build(BuildContext context) {
     final budget = widget.budget;
+    final color = budget.totalUsed / budget.totalBudget > 1.0
+        ? Colors.redAccent
+        : Colors.green;
+
     return Container(
         padding: EdgeInsets.all(20),
         child: Row(
@@ -61,8 +68,8 @@ class BudgetCardState extends State<BudgetCard> {
               lineWidth: 6.0,
               percent: min(budget.totalUsed / budget.totalBudget, 1.0),
               center: Icon(IconHelper().getIconByName(budget.name),
-                  color: Colors.green, size: 30),
-              progressColor: Colors.green,
+                  color: color, size: 30),
+              progressColor: color,
             ),
             SizedBox(width: 18),
             Column(
@@ -97,7 +104,8 @@ class BudgetCardState extends State<BudgetCard> {
                     onPressed: () => deleteBudget(budget.id)),
                 IconButton(
                     icon: Icon(Icons.edit, color: Colors.green, size: 30),
-                    onPressed: () {})
+                    onPressed: () => Navigator.push(
+                        context, FadeRoute(page: BudgetEditPopup(budget))))
               ],
             )
           ],

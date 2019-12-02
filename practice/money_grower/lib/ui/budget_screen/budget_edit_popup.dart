@@ -1,4 +1,3 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,17 +7,18 @@ import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/budget_model.dart';
 import 'package:money_grower/models/user_model.dart';
-import 'package:money_grower/ui/custom_control/faded_transition.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
-import 'budget_category_page.dart';
-import 'budget_screen.dart';
+class BudgetEditPopup extends StatefulWidget {
+  final budget;
 
-class BudgetAddPopup extends StatefulWidget {
+  BudgetEditPopup(this.budget);
+
   @override
-  State<StatefulWidget> createState() => BudgetAddPopupState();
+  State<StatefulWidget> createState() => BudgetEditPopupState();
 }
 
-class BudgetAddPopupState extends State<BudgetAddPopup> {
+class BudgetEditPopupState extends State<BudgetEditPopup> {
   final priceTextController = TextEditingController();
   final beginTextController = TextEditingController();
   final endTextController = TextEditingController();
@@ -27,9 +27,13 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
   @override
   void initState() {
     super.initState();
-    priceTextController.text = '0';
-    beginTextController.text = DateFormat("dd/MM/yyyy").format(DateTime.now());
-    endTextController.text = DateFormat("dd/MM/yyyy").format(DateTime.now());
+    final budget = widget.budget;
+
+    priceTextController.text = FormatHelper().formatMoney(budget.totalBudget);
+    nameTextController.text = budget.name;
+    beginTextController.text =
+        DateFormat("dd/MM/yyyy").format(budget.beginDate);
+    endTextController.text = DateFormat("dd/MM/yyyy").format(budget.endDate);
   }
 
   void setPrice(String price) {
@@ -73,24 +77,6 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
         ),
       );
     } else {
-      if (BudgetScreenState.budgetList.map((b) => b.name).contains(name)) {
-        showDialog(
-            context: context,
-            builder: (_) => CupertinoAlertDialog(
-                  title: Text("Ngân sách đã tồn tại"),
-                  content: Text(
-                      "\nNgân sách " + name + " đã tồn tại trong danh sách",
-                      style: TextStyle(fontSize: 16)),
-                  actions: [
-                    CupertinoDialogAction(
-                        isDefaultAction: true,
-                        child: Text("Đóng"),
-                        onPressed: () => Navigator.of(context).pop())
-                  ],
-                ));
-        return;
-      }
-
       final totalBudget = int.parse(priceText);
       final beginDate = DateFormat("dd/MM/yyyy").parse(beginText);
       final endDate = DateFormat("dd/MM/yyyy").parse(endText);
@@ -115,10 +101,10 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
         return;
       }
 
-      final budget =
-          BudgetModel(null, name, beginDate, endDate, totalBudget, totalUsed);
-      await BudgetBloc().insertBudget(budget);
+      final budget = BudgetModel(
+          widget.budget.id, name, beginDate, endDate, totalBudget, totalUsed);
       Navigator.of(context).pop();
+      BudgetBloc().updateBudget(budget);
     }
   }
 
@@ -131,7 +117,7 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
             Container(
                 margin: EdgeInsets.only(right: 20),
                 child: IconButton(
-                    icon: Icon(Icons.playlist_add_check),
+                    icon: Icon(Icons.edit),
                     onPressed: () => submitBudget()))
           ],
         ),
@@ -158,17 +144,16 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
                   ),
                   SizedBox(height: 30),
                   TextField(
-                      controller: nameTextController,
-                      decoration: InputDecoration(
-                        labelText: 'Loại giao dịch',
-                        contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                      style: TextStyle(fontSize: 24),
-                      readOnly: true,
-                      onTap: () => Navigator.push(context,
-                          FadeRoute(page: BudgetCategoryPage(setName)))),
+                    controller: nameTextController,
+                    decoration: InputDecoration(
+                      labelText: 'Loại giao dịch',
+                      contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    style: TextStyle(fontSize: 24),
+                    readOnly: true,
+                  ),
                   SizedBox(height: 30),
                   DateTimeField(
                     decoration: InputDecoration(

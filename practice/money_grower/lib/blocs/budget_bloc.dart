@@ -10,4 +10,6 @@ class BudgetBloc {
   Future insertBudget(BudgetModel budget) => repository.insertBudget(budget);
 
   Future deleteBudget(String id) => repository.deleteBudget(id);
+
+  Future updateBudget(BudgetModel budget) => repository.updateBudget(budget);
 }

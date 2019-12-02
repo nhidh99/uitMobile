@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/transaction_model.dart';
+import 'package:money_grower/ui/custom_control/faded_transition.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_category_page.dart';
 
 class TransactionAddPopup extends StatefulWidget {
@@ -168,10 +169,7 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
               onTap: () =>
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                      TransactionCategoryPage(setName),
-                    fullscreenDialog: true)),
+                  FadeRoute(page:TransactionCategoryPage(setName)))
             ),
             SizedBox(height: 30),
             TextField(

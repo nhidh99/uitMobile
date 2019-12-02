@@ -30,8 +30,16 @@ class Repository {
   Future getLoanDebtList(String username) =>
       transactionProvider.getLoanDebtList(username);
 
-  Future insertTransaction(TransactionModel transaction) =>
-      transactionProvider.insertTransaction(transaction);
+  Future insertTransaction(TransactionModel transaction) async {
+    transactionProvider.insertTransaction(transaction);
+    final budget = await budgetProvider.getBudgetByName(
+        transaction.name, UserModel().username);
+
+    if (budget != null) { // Find a budget name match with transaction name
+      budget.totalUsed -= transaction.price;
+      budgetProvider.updateBudget(budget);
+    }
+  }
 
   Future deleteTransaction(String id) =>
       transactionProvider.deleteTransaction(id);
@@ -42,7 +50,11 @@ class Repository {
   Future getBudgetsByUsername(String username) =>
       budgetProvider.getBudgetsByUsername(username);
 
-  Future insertBudget(BudgetModel budget) => budgetProvider.insertBudget(budget);
+  Future insertBudget(BudgetModel budget) =>
+      budgetProvider.insertBudget(budget);
 
   Future deleteBudget(String id) => budgetProvider.deleteBudget(id);
+
+  Future updateBudget(BudgetModel budget) =>
+      budgetProvider.updateBudget(budget);
 }

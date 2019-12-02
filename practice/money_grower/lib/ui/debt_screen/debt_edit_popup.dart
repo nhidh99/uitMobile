@@ -62,12 +62,13 @@ class DebtEditPopupState extends State<DebtEditPopup> {
                               fontWeight: FontWeight.bold,
                               color: Colors.redAccent)),
                       onPressed: () {
+                        final now = DateTime.now();
                         final payTransaction = TransactionModel(
                             null,
                             'Thu nợ',
                             'Thu tiền vay',
                             transaction.price.abs(),
-                            DateTime.now());
+                            DateTime(now.year, now.month, now.day));
                         TransactionBloc().insertTransaction(payTransaction);
                         transaction.done = true;
                         TransactionBloc().updateTransaction(transaction);

@@ -80,7 +80,14 @@ class StatisticsScreenState extends State<StatisticsScreen> {
               return Center(child: Text("Không có kết nối mạng"));
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return JumpingDotsProgressIndicator(fontSize: 30);
+              return Column(
+                children: <Widget>[
+                  MonthStriper(summary.date, true),
+                  SizedBox(height: 30),
+                  JumpingDotsProgressIndicator(
+                      fontSize: 20, color: Colors.green)
+                ],
+              );
             case ConnectionState.done:
               if (snapshot.hasError)
                 return Center(child: Text("Lỗi kết nối"));

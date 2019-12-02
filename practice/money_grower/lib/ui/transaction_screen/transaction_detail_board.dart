@@ -5,11 +5,11 @@ import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 
 class TransactionDetailBoard extends StatelessWidget {
   final dateList = TransactionSummary()
-    .transactionList
-    .map((transaction) => transaction.date)
-    .toSet()
-    .toList()
-    ..sort((b, a) => a.compareTo(b));
+      .transactionList
+      .map((transaction) => transaction.date)
+      .toSet()
+      .toList()
+        ..sort((b, a) => a.compareTo(b));
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +22,27 @@ class TransactionDetailBoard extends StatelessWidget {
         },
       );
     } else {
-      return Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: 10),
-            Text(":-)",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 48,
-                color: Colors.black45)),
-            SizedBox(height: 15),
-            Text("Không có giao dịch",
-              style: TextStyle(fontSize: 24, color: Colors.black45)),
-          ]));
+      return Container(
+          padding: EdgeInsets.only(top: 30),
+          color: Colors.white,
+          child: Center(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                SizedBox(height: 10),
+                Text(":-)",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 48,
+                        color: Colors.black45)),
+                SizedBox(height: 15),
+                Text("Không có giao dịch",
+                    style: TextStyle(fontSize: 24, color: Colors.black45)),
+                SizedBox(height: 15),
+                Center(
+                    child: Text("Nhấn + để thêm giao dịch",
+                        style: TextStyle(fontSize: 16, color: Colors.black45)))
+              ])));
     }
   }
 }

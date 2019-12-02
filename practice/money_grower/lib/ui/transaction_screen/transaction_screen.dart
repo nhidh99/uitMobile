@@ -47,7 +47,8 @@ class TransactionScreenState extends State<TransactionScreen> {
                 children: <Widget>[
                   MonthStriper(summary.date, true),
                   SizedBox(height: 30),
-                  JumpingDotsProgressIndicator(fontSize: 20)
+                  JumpingDotsProgressIndicator(
+                      fontSize: 20, color: Colors.green)
                 ],
               );
             case ConnectionState.done:

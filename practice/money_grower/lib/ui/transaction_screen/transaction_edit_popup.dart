@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/transaction_model.dart';
+import 'package:money_grower/ui/custom_control/faded_transition.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_category_page.dart';
 
 // ignore: must_be_immutable
@@ -194,22 +195,17 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
                   ),
                   SizedBox(height: 30),
                   TextField(
-                    controller: nameTextController,
-                    decoration: InputDecoration(
-                      labelText: 'Loại giao dịch',
-                      contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    style: TextStyle(fontSize: 24),
-                    readOnly: true,
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                TransactionCategoryPage(setName),
-                            fullscreenDialog: true)),
-                  ),
+                      controller: nameTextController,
+                      decoration: InputDecoration(
+                        labelText: 'Loại giao dịch',
+                        contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      style: TextStyle(fontSize: 24),
+                      readOnly: true,
+                      onTap: () => Navigator.push(context,
+                          FadeRoute(page: TransactionCategoryPage(setName)))),
                   SizedBox(height: 30),
                   TextField(
                     controller: noteTextController,

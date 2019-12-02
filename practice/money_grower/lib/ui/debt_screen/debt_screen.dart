@@ -42,7 +42,8 @@ class DebtScreenState extends State<DebtScreen> {
               return Center(child: Text("Không có kết nối mạng"));
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return JumpingDotsProgressIndicator(fontSize: 30);
+              return JumpingDotsProgressIndicator(
+                  fontSize: 30, color: Colors.green);
             case ConnectionState.done:
               if (snapshot.hasError)
                 return Center(child: Text("Lỗi kết nối"));

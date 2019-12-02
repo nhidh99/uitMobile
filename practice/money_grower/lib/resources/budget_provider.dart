@@ -17,4 +17,17 @@ class BudgetProvider {
       await doc.ref.add(budget.toJson());
 
   Future deleteBudget(String id) async => await doc.ref.document(id).delete();
+
+  Future updateBudget(BudgetModel budget) async =>
+      await doc.ref.document(budget.id).updateData(budget.toJson());
+
+  Future getBudgetByName(String name, String username) async {
+    final response = await doc.ref
+        .where('username', isEqualTo: username)
+        .where('name', isEqualTo: name)
+        .getDocuments();
+    if (response.documents.isEmpty) return null;
+    final output = response.documents[0];
+    return BudgetModel.fromMap(output.data, output.documentID);
+  }
 }
