@@ -24,6 +24,7 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
   final dateTextController = TextEditingController();
   final nameTextController = TextEditingController();
   final noteTextController = TextEditingController();
+  bool isSubmitted = false;
 
   @override
   void initState() {
@@ -64,8 +65,7 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
                             fontWeight: FontWeight.bold,
                             color: Colors.redAccent)),
                     onPressed: () {
-                      TransactionBloc()
-                          .deleteTransaction(widget.transaction.id);
+                      TransactionBloc().deleteTransaction(widget.transaction);
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     }),
@@ -77,7 +77,7 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
             ));
   }
 
-  void updateTransaction() {
+  void updateTransaction() async {
     final priceText = priceTextController.text.split(',').join('');
     final dateText = dateTextController.text;
     final name = nameTextController.text;
@@ -125,7 +125,7 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
         transaction = TransactionModel(widget.transaction.id, name, note,
             isIncomeTransaction ? price : -price, date);
       }
-      TransactionBloc().updateTransaction(transaction);
+      await TransactionBloc().updateTransaction(transaction);
       Navigator.of(context).pop();
     }
   }
@@ -139,12 +139,18 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
             Container(
                 child: IconButton(
                     icon: Icon(Icons.delete),
-                    onPressed: () => deleteTransaction())),
+                    onPressed: () {
+                      isSubmitted = true;
+                      deleteTransaction();
+                    })),
             Container(
                 margin: EdgeInsets.only(right: 25),
                 child: IconButton(
                     icon: Icon(Icons.edit),
-                    onPressed: () => updateTransaction()))
+                    onPressed: () {
+                      isSubmitted = true;
+                      updateTransaction();
+                    }))
           ],
         ),
         body: SingleChildScrollView(
@@ -181,6 +187,7 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
                     controller: dateTextController,
                     readOnly: true,
                     onShowPicker: (context, currentValue) async {
+                      if (isSubmitted) return null;
                       final date = await showDatePicker(
                           context: context,
                           firstDate: DateTime(1900),
@@ -204,8 +211,11 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
                       ),
                       style: TextStyle(fontSize: 24),
                       readOnly: true,
-                      onTap: () => Navigator.push(context,
-                          FadeRoute(page: TransactionCategoryPage(setName)))),
+                      onTap: () {
+                        if (isSubmitted) return;
+                        Navigator.push(context,
+                            FadeRoute(page: TransactionCategoryPage(setName)));
+                      }),
                   SizedBox(height: 30),
                   TextField(
                     controller: noteTextController,

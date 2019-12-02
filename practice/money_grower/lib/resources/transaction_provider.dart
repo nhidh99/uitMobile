@@ -88,4 +88,9 @@ class TransactionProvider {
   Future updateTransaction(TransactionModel transaction) async {
     await doc.ref.document(transaction.id).updateData(transaction.toJson());
   }
+
+  Future getTransactionById(String id) async {
+    final output = await doc.ref.document(id).get();
+    return TransactionModel.fromMap(output.data, output.documentID);
+  }
 }

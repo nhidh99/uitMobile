@@ -21,5 +21,6 @@ class TransactionBloc {
   Future updateTransaction(TransactionModel transaction) =>
       repository.updateTransaction(transaction);
 
-  Future deleteTransaction(String id) => repository.deleteTransaction(id);
+  Future deleteTransaction(TransactionModel transaction) =>
+    repository.deleteTransaction(transaction);
 }

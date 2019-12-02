@@ -117,8 +117,8 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
 
       final budget =
           BudgetModel(null, name, beginDate, endDate, totalBudget, totalUsed);
-      await BudgetBloc().insertBudget(budget);
       Navigator.of(context).pop();
+      BudgetBloc().insertBudget(budget);
     }
   }
 
