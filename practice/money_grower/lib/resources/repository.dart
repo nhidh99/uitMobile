@@ -1,14 +1,28 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:money_grower/resources/user_provider.dart';
+import 'package:loginapp/models/transaction_model.dart';
+import 'package:loginapp/resources/transaction_provider.dart';
+import 'package:loginapp/resources/user_provider.dart';
+
 import '../models/user_model.dart';
 
 class Repository {
+  final userProvider = UserProvider();
+  final transactionProvider = TransactionProvider();
 
-  final userApiProvider = UserApiProvider();
+  Future getUserByUsername(String username) =>
+      userProvider.getUserByUsername(username);
 
-  Future<List<UserModel>> getUserList() => userApiProvider.getUserList();
-  Stream<QuerySnapshot> getUserListAsStream() => userApiProvider.getUserListAsStream();
-  Future insertUser(UserModel data) => userApiProvider.insertUser(data);
-  Future updateUser(UserModel data, String id) => userApiProvider.updateUser(data, id);
+  Future insertUser(UserModel data) =>
+    userProvider.insertUser(data);
+
+  Future updateUser(UserModel data, String id) =>
+      userProvider.updateUser(data, id);
+
+  Future getTransactionSummaryOfMonth(DateTime date, String username) =>
+      transactionProvider.getTransactionSummaryOfMonth(date, username);
+
+  insertTransaction(TransactionModel transaction) =>
+    transactionProvider.insertTransaction(transaction);
+
+  Future isUserExist(String uid) => userProvider.isUserExist(uid);
 }
