@@ -16,8 +16,7 @@ class Repository {
 
   Future insertUser(UserModel data) => userProvider.insertUser(data);
 
-  Future updateUser(UserModel data, String id) =>
-      userProvider.updateUser(data, id);
+  Future updateUser(UserModel data) => userProvider.updateUser(data);
 
   Future getTransactionById(String id) =>
       transactionProvider.getTransactionById(id);
@@ -35,11 +34,17 @@ class Repository {
 
   Future insertTransaction(TransactionModel transaction) async {
     transactionProvider.insertTransaction(transaction);
+
+    // Update user income
+    final user = UserModel();
+    user.income += transaction.price;
+    await userProvider.updateUser(user);
+
+    // Update match budget
     final budget = await budgetProvider.getMatchBudgetByTransaction(
         transaction, UserModel().username);
 
     if (budget != null) {
-      // Find a budget name match with transaction name
       budget.totalUsed -= transaction.price;
       budgetProvider.updateBudget(budget);
     }
@@ -50,8 +55,13 @@ class Repository {
     final budget = await budgetProvider.getMatchBudgetByTransaction(
         transaction, UserModel().username);
 
+    // Update user income
+    final user = UserModel();
+    user.income -= transaction.price;
+    await userProvider.updateUser(user);
+
+    // Update match budget
     if (budget != null) {
-      // Find a budget name match with transaction name
       budget.totalUsed += transaction.price;
       budgetProvider.updateBudget(budget);
     }

@@ -5,5 +5,5 @@ class UserBloc {
   final repository = Repository();
   Future getUserByUsername(String username) => repository.getUserByUsername(username);
   Future insertUser(UserModel data) => repository.insertUser(data);
-  Future updateUser(UserModel data, String id) => repository.updateUser(data, id);
+  Future updateUser(UserModel data, String id) => repository.updateUser(data);
 }

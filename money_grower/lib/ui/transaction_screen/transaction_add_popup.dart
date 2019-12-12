@@ -40,7 +40,7 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
     nameTextController.text = name;
   }
 
-  void submitTransaction() {
+  void submitTransaction() async {
     final priceText = priceTextController.text.split(',').join('');
     final dateText = dateTextController.text;
     final name = nameTextController.text;
@@ -91,7 +91,7 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
           null, name, note, isIncomeTransaction ? price : -price, date);
       }
 
-      TransactionBloc().insertTransaction(transaction);
+      await TransactionBloc().insertTransaction(transaction);
       Navigator.of(context).pop();
     }
   }

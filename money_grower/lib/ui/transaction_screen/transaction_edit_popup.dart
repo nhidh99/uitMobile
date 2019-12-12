@@ -64,9 +64,9 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.redAccent)),
-                    onPressed: () {
-                      TransactionBloc().deleteTransaction(widget.transaction);
+                    onPressed: () async {
                       Navigator.of(context).pop();
+                      await TransactionBloc().deleteTransaction(widget.transaction);
                       Navigator.of(context).pop();
                     }),
                 CupertinoDialogAction(

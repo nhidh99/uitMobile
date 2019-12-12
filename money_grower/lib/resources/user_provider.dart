@@ -12,8 +12,8 @@ class UserProvider {
     UserModel.fromMap(json.data, json.documentID);
   }
 
-  Future updateUser(UserModel data, String id) async {
-    await doc.ref.document(id).updateData(data.toJson());
+  Future updateUser(UserModel data) async {
+    await doc.ref.document(data.id).updateData(data.toJson());
   }
 
   Future insertUser(UserModel data) async {

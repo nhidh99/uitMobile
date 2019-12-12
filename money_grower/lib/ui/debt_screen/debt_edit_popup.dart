@@ -61,7 +61,7 @@ class DebtEditPopupState extends State<DebtEditPopup> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.redAccent)),
-                      onPressed: () {
+                      onPressed: () async {
                         final now = DateTime.now();
                         final payTransaction = TransactionModel(
                             null,
@@ -69,10 +69,10 @@ class DebtEditPopupState extends State<DebtEditPopup> {
                             'Thu tiền vay',
                             transaction.price.abs(),
                             DateTime(now.year, now.month, now.day));
-                        TransactionBloc().insertTransaction(payTransaction);
-                        transaction.done = true;
-                        TransactionBloc().updateTransaction(transaction);
                         Navigator.of(context).pop();
+                        transaction.done = true;
+                        await TransactionBloc().updateTransaction(transaction);
+                        TransactionBloc().insertTransaction(payTransaction);
                         Navigator.of(context).pop();
                       }),
                   CupertinoDialogAction(
