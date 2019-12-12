@@ -9,6 +9,8 @@ import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/budget_model.dart';
 import 'package:money_grower/models/user_model.dart';
 import 'package:money_grower/ui/custom_control/faded_transition.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+
 
 import 'budget_category_page.dart';
 import 'budget_screen.dart';
@@ -23,6 +25,18 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
   final beginTextController = TextEditingController();
   final endTextController = TextEditingController();
   final nameTextController = TextEditingController();
+  bool _saving = false;
+
+  void saveSubmit() {
+    setState(() {
+      _saving = true;
+    });
+    Future.delayed(new Duration(seconds: 4), () {
+      setState(() {
+        _saving = false;
+      });
+    });
+  }
 
   @override
   void initState() {
@@ -115,10 +129,11 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
         return;
       }
 
+      saveSubmit();
       final budget =
           BudgetModel(null, name, beginDate, endDate, totalBudget, totalUsed);
-      Navigator.of(context).pop();
       BudgetBloc().insertBudget(budget);
+      Navigator.of(context).pop();
     }
   }
 
@@ -135,7 +150,7 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
                     onPressed: () => submitBudget()))
           ],
         ),
-        body: SingleChildScrollView(
+        body: ModalProgressHUD(child: SingleChildScrollView(
             child: Container(
                 padding: EdgeInsets.only(left: 30, right: 30, top: 40),
                 child: Column(children: <Widget>[
@@ -220,6 +235,6 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
                     },
                   ),
                   SizedBox(height: 30),
-                ]))));
+                ]))), inAsyncCall: _saving));
   }
 }

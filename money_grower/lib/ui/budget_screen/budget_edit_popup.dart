@@ -8,6 +8,8 @@ import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/budget_model.dart';
 import 'package:money_grower/models/user_model.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+
 
 class BudgetEditPopup extends StatefulWidget {
   final budget;
@@ -19,10 +21,22 @@ class BudgetEditPopup extends StatefulWidget {
 }
 
 class BudgetEditPopupState extends State<BudgetEditPopup> {
+  bool _saving = false;
   final priceTextController = TextEditingController();
   final beginTextController = TextEditingController();
   final endTextController = TextEditingController();
   final nameTextController = TextEditingController();
+
+  void saveSubmit() {
+    setState(() {
+      _saving = true;
+    });
+    Future.delayed(new Duration(seconds: 4), () {
+      setState(() {
+        _saving = false;
+      });
+    });
+  }
 
   @override
   void initState() {
@@ -101,10 +115,11 @@ class BudgetEditPopupState extends State<BudgetEditPopup> {
         return;
       }
 
+      saveSubmit();
       final budget = BudgetModel(
           widget.budget.id, name, beginDate, endDate, totalBudget, totalUsed);
       Navigator.of(context).pop();
-      BudgetBloc().updateBudget(budget);
+      await BudgetBloc().updateBudget(budget);
     }
   }
 
@@ -121,7 +136,7 @@ class BudgetEditPopupState extends State<BudgetEditPopup> {
                     onPressed: () => submitBudget()))
           ],
         ),
-        body: SingleChildScrollView(
+        body: ModalProgressHUD(child: SingleChildScrollView(
             child: Container(
                 padding: EdgeInsets.only(left: 30, right: 30, top: 40),
                 child: Column(children: <Widget>[
@@ -205,6 +220,6 @@ class BudgetEditPopupState extends State<BudgetEditPopup> {
                     },
                   ),
                   SizedBox(height: 30),
-                ]))));
+                ]))), inAsyncCall: _saving));
   }
 }

@@ -5,6 +5,8 @@ import 'package:money_grower/models/transaction_model.dart';
 import 'package:money_grower/ui/debt_screen/debt_edit_popup.dart';
 import 'package:sprintf/sprintf.dart';
 
+import 'faded_transition.dart';
+
 // ignore: non_constant_identifier_names, must_be_immutable
 class TransactionLoanCard extends StatelessWidget {
   TransactionModel transaction;
@@ -41,10 +43,8 @@ class TransactionLoanCard extends StatelessWidget {
 
     return GestureDetector(
         onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DebtEditPopup(transaction),
-                fullscreenDialog: true)),
+          context,
+          FadeRoute(page:DebtEditPopup(transaction))),
         child: Container(
             color: Colors.white,
             padding: EdgeInsets.fromLTRB(20, 10, 20, 10),

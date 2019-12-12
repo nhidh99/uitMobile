@@ -70,8 +70,8 @@ class Repository {
   Future updateTransaction(TransactionModel transaction) async {
     final oldTransaction =
         await transactionProvider.getTransactionById(transaction.id);
-    deleteTransaction(oldTransaction);
-    insertTransaction(transaction);
+    await deleteTransaction(oldTransaction);
+    await insertTransaction(transaction);
   }
 
   Future getBudgetsByUsername(String username) =>

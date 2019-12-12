@@ -7,6 +7,7 @@ import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/transaction_model.dart';
 import 'package:money_grower/ui/custom_control/faded_transition.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_category_page.dart';
 
 class TransactionAddPopup extends StatefulWidget {
@@ -19,6 +20,7 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
   final dateTextController = TextEditingController();
   final nameTextController = TextEditingController();
   final noteTextController = TextEditingController();
+  bool _saving = false;
 
   @override
   void initState() {
@@ -47,25 +49,24 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
     final note = noteTextController.text.trim();
 
     if (priceText.isEmpty ||
-      priceText == '0' ||
-      dateText.isEmpty ||
-      name.isEmpty) {
+        priceText == '0' ||
+        dateText.isEmpty ||
+        name.isEmpty) {
       showDialog(
         context: context,
-        builder: (_) =>
-          CupertinoAlertDialog(
-            title: Text("Lỗi"),
-            content: Text(
+        builder: (_) => CupertinoAlertDialog(
+          title: Text("Lỗi"),
+          content: Text(
               "Số tiền phải là số dương\n"
-                "Ngày giao dịch và loại giao dịch không được để trống.",
+              "Ngày giao dịch và loại giao dịch không được để trống.",
               style: TextStyle(fontSize: 16)),
-            actions: [
-              CupertinoDialogAction(
+          actions: [
+            CupertinoDialogAction(
                 isDefaultAction: true,
                 child: Text("Đóng"),
                 onPressed: () => Navigator.of(context).pop())
-            ],
-          ),
+          ],
+        ),
       );
     } else {
       final isIncomeTransaction = [
@@ -84,12 +85,21 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
 
       if (name == 'Cho vay' || name == 'Vay tiền') {
         transaction = DebtTransactionModel(
-          null, name, note, isIncomeTransaction ? price : -price, date);
-      }
-      else {
+            null, name, note, isIncomeTransaction ? price : -price, date);
+      } else {
         transaction = TransactionModel(
-          null, name, note, isIncomeTransaction ? price : -price, date);
+            null, name, note, isIncomeTransaction ? price : -price, date);
       }
+
+      setState(() {
+        _saving = true;
+      });
+
+      Future.delayed(new Duration(seconds: 4), () {
+        setState(() {
+          _saving = false;
+        });
+      });
 
       await TransactionBloc().insertTransaction(transaction);
       Navigator.of(context).pop();
@@ -99,92 +109,93 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Thêm giao dịch'),
-        actions: <Widget>[
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            child: IconButton(
-              icon: Icon(Icons.playlist_add_check),
-              onPressed: () => submitTransaction()))
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(left: 30, right: 30, top: 40),
-          child: Column(children: <Widget>[
-            TextField(
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(15),
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-              controller: priceTextController,
-              onChanged: (text) => setPrice(text),
-              style: TextStyle(fontSize: 24),
-              decoration: InputDecoration(
-                labelText: 'Số tiền',
-                contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              ),
-              keyboardType:
-              TextInputType.numberWithOptions(decimal: true),
-            ),
-            SizedBox(height: 30),
-            DateTimeField(
-              decoration: InputDecoration(
-                labelText: 'Thời gian',
-                contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              ),
-              style: TextStyle(fontSize: 22),
-              format: DateFormat("dd/MM/yyyy"),
-              controller: dateTextController,
-              readOnly: true,
-              onShowPicker: (context, currentValue) async {
-                final date = await showDatePicker(
-                  context: context,
-                  firstDate: DateTime(1900),
-                  initialDate: currentValue ?? DateTime.now(),
-                  lastDate: DateTime(2100));
-                if (date != null) {
-                  return DateTimeField.combine(date, null);
-                } else {
-                  return currentValue;
-                }
-              },
-            ),
-            SizedBox(height: 30),
-            TextField(
-              controller: nameTextController,
-              decoration: InputDecoration(
-                labelText: 'Loại giao dịch',
-                contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              ),
-              style: TextStyle(fontSize: 24),
-              readOnly: true,
-              onTap: () =>
-                Navigator.push(
-                  context,
-                  FadeRoute(page:TransactionCategoryPage(setName)))
-            ),
-            SizedBox(height: 30),
-            TextField(
-              controller: noteTextController,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(30),
-              ],
-              decoration: InputDecoration(
-                labelText: 'Ghi chú',
-                contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              ),
-              style: TextStyle(fontSize: 24),
-            ),
-          ]))));
+        appBar: AppBar(
+          title: Text('Thêm giao dịch'),
+          actions: <Widget>[
+            Container(
+                margin: EdgeInsets.only(right: 20),
+                child: IconButton(
+                    icon: Icon(Icons.playlist_add_check),
+                    onPressed: () => submitTransaction()))
+          ],
+        ),
+        body: ModalProgressHUD(
+            child: SingleChildScrollView(
+                child: Container(
+                    padding: EdgeInsets.only(left: 30, right: 30, top: 40),
+                    child: Column(children: <Widget>[
+                      TextField(
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(15),
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
+                        controller: priceTextController,
+                        onChanged: (text) => setPrice(text),
+                        style: TextStyle(fontSize: 24),
+                        decoration: InputDecoration(
+                          labelText: 'Số tiền',
+                          contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+                      ),
+                      SizedBox(height: 30),
+                      DateTimeField(
+                        decoration: InputDecoration(
+                          labelText: 'Thời gian',
+                          contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        style: TextStyle(fontSize: 22),
+                        format: DateFormat("dd/MM/yyyy"),
+                        controller: dateTextController,
+                        readOnly: true,
+                        onShowPicker: (context, currentValue) async {
+                          final date = await showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1900),
+                              initialDate: currentValue ?? DateTime.now(),
+                              lastDate: DateTime(2100));
+                          if (date != null) {
+                            return DateTimeField.combine(date, null);
+                          } else {
+                            return currentValue;
+                          }
+                        },
+                      ),
+                      SizedBox(height: 30),
+                      TextField(
+                          controller: nameTextController,
+                          decoration: InputDecoration(
+                            labelText: 'Loại giao dịch',
+                            contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          style: TextStyle(fontSize: 24),
+                          readOnly: true,
+                          onTap: () => Navigator.push(
+                              context,
+                              FadeRoute(
+                                  page: TransactionCategoryPage(setName)))),
+                      SizedBox(height: 30),
+                      TextField(
+                        controller: noteTextController,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(30),
+                        ],
+                        decoration: InputDecoration(
+                          labelText: 'Ghi chú',
+                          contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ]))),
+            inAsyncCall: _saving));
   }
 }

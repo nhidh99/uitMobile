@@ -5,6 +5,7 @@ import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/transaction_model.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 // ignore: must_be_immutable
 class DebtEditPopup extends StatefulWidget {
@@ -17,6 +18,20 @@ class DebtEditPopup extends StatefulWidget {
 }
 
 class DebtEditPopupState extends State<DebtEditPopup> {
+  bool _saving = false;
+
+  saveSubmit() {
+    setState(() {
+      _saving = true;
+    });
+
+    Future.delayed(new Duration(seconds: 4), () {
+      setState(() {
+        _saving = false;
+      });
+    });
+  }
+
   deleteLoan(DebtTransactionModel transaction) {
     showDialog(
         context: context,
@@ -33,6 +48,7 @@ class DebtEditPopupState extends State<DebtEditPopup> {
                             color: Colors.redAccent)),
                     onPressed: () async {
                       Navigator.of(context).pop();
+                      saveSubmit();
                       transaction.done = true;
                       await TransactionBloc().updateTransaction(transaction);
                       Navigator.of(context).pop();
@@ -70,9 +86,10 @@ class DebtEditPopupState extends State<DebtEditPopup> {
                             transaction.price.abs(),
                             DateTime(now.year, now.month, now.day));
                         Navigator.of(context).pop();
+                        saveSubmit();
                         transaction.done = true;
                         await TransactionBloc().updateTransaction(transaction);
-                        TransactionBloc().insertTransaction(payTransaction);
+                        await TransactionBloc().insertTransaction(payTransaction);
                         Navigator.of(context).pop();
                       }),
                   CupertinoDialogAction(
@@ -97,6 +114,8 @@ class DebtEditPopupState extends State<DebtEditPopup> {
                               fontWeight: FontWeight.bold,
                               color: Colors.redAccent)),
                       onPressed: () async {
+                        Navigator.of(context).pop();
+                        saveSubmit();
                         final now = DateTime.now();
                         final payTransaction = TransactionModel(
                             null,
@@ -104,10 +123,9 @@ class DebtEditPopupState extends State<DebtEditPopup> {
                             'Trả nợ',
                             -transaction.price,
                             DateTime(now.year, now.month, now.day));
-                        await TransactionBloc().insertTransaction(payTransaction);
                         transaction.done = true;
                         await TransactionBloc().updateTransaction(transaction);
-                        Navigator.of(context).pop();
+                        await TransactionBloc().insertTransaction(payTransaction);
                         Navigator.of(context).pop();
                       }),
                   CupertinoDialogAction(
@@ -138,7 +156,7 @@ class DebtEditPopupState extends State<DebtEditPopup> {
                 ))
           ],
         ),
-        body: SingleChildScrollView(
+        body: ModalProgressHUD(child: SingleChildScrollView(
             child: Container(
                 padding: EdgeInsets.only(left: 30, right: 30, top: 40),
                 child: Column(children: <Widget>[
@@ -201,6 +219,6 @@ class DebtEditPopupState extends State<DebtEditPopup> {
                     ),
                     style: TextStyle(fontSize: 24),
                   ),
-                ]))));
+                ]))), inAsyncCall: _saving));
   }
 }
