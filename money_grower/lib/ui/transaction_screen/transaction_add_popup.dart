@@ -94,13 +94,6 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
       setState(() {
         _saving = true;
       });
-
-      Future.delayed(new Duration(seconds: 4), () {
-        setState(() {
-          _saving = false;
-        });
-      });
-
       await TransactionBloc().insertTransaction(transaction);
       Navigator.of(context).pop();
     }

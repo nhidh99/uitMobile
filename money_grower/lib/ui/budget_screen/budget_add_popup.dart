@@ -31,11 +31,6 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
     setState(() {
       _saving = true;
     });
-    Future.delayed(new Duration(seconds: 4), () {
-      setState(() {
-        _saving = false;
-      });
-    });
   }
 
   @override

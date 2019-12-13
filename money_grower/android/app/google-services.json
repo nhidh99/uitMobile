@@ -8,6 +8,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:910049158086:android:053d66b7eeecdb655d48c7",
+        "android_client_info": {
+          "package_name": "com.example.gg_signin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "910049158086-gooepm6mkklmes5br52g8dbud7cma4o0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gg_signin",
+            "certificate_hash": "7bb51572dfef98c4354521f7829cb269856eea19"
+          }
+        },
+        {
+          "client_id": "910049158086-fb9dk0715nj4hrrtd5ns7jis4cekov6m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCco14VZLW8tUcSqQp7isKu0vA33XJbeYw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "910049158086-fb9dk0715nj4hrrtd5ns7jis4cekov6m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:910049158086:android:335b1032202eedb35d48c7",
         "android_client_info": {
           "package_name": "com.example.money_grower"

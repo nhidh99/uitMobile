@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:month_picker_strip/month_picker_strip.dart';
+
+import 'month_strip.dart';
 
 // ignore: non_constant_identifier_names, must_be_immutable
 class MonthStriper extends StatelessWidget {

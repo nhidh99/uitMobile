@@ -24,12 +24,6 @@ class DebtEditPopupState extends State<DebtEditPopup> {
     setState(() {
       _saving = true;
     });
-
-    Future.delayed(new Duration(seconds: 4), () {
-      setState(() {
-        _saving = false;
-      });
-    });
   }
 
   deleteLoan(DebtTransactionModel transaction) {

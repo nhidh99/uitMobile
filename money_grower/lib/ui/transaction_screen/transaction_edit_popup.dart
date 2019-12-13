@@ -42,12 +42,6 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
     setState(() {
       _saving = true;
     });
-
-    Future.delayed(new Duration(seconds: 4), () {
-      setState(() {
-        _saving = false;
-      });
-    });
   }
 
   void setPrice(String price) {

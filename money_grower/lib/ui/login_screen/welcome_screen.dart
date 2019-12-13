@@ -14,6 +14,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
+
+  final googleSignIn = new GoogleSignIn();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -120,7 +123,6 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Future<String> signInWithGoogle() async {
-    final googleSignIn = GoogleSignIn();
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
