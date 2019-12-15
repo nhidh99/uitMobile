@@ -19,8 +19,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
+    return Scaffold(
       body: Container(
         color: Colors.green[500],
         child: Stack(
@@ -87,7 +86,7 @@ class LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
-    ));
+    );
   }
 
   void checkUser() async {

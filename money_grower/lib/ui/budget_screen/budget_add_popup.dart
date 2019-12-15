@@ -11,8 +11,7 @@ import 'package:money_grower/models/user_model.dart';
 import 'package:money_grower/ui/custom_control/faded_transition.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-
-import 'budget_category_page.dart';
+import '../custom_control/category_page.dart';
 import 'budget_screen.dart';
 
 class BudgetAddPopup extends StatefulWidget {
@@ -145,91 +144,113 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
                     onPressed: () => submitBudget()))
           ],
         ),
-        body: ModalProgressHUD(child: SingleChildScrollView(
-            child: Container(
-                padding: EdgeInsets.only(left: 30, right: 30, top: 40),
-                child: Column(children: <Widget>[
-                  TextField(
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(15),
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
-                    controller: priceTextController,
-                    onChanged: (text) => setPrice(text),
-                    style: TextStyle(fontSize: 24),
-                    decoration: InputDecoration(
-                      labelText: 'Số tiền',
-                      contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                  ),
-                  SizedBox(height: 30),
-                  TextField(
-                      controller: nameTextController,
-                      decoration: InputDecoration(
-                        labelText: 'Loại giao dịch',
-                        contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
+        body: ModalProgressHUD(
+            child: SingleChildScrollView(
+                child: Container(
+                    padding: EdgeInsets.only(left: 30, right: 30, top: 40),
+                    child: Column(children: <Widget>[
+                      TextField(
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(15),
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
+                        controller: priceTextController,
+                        onChanged: (text) => setPrice(text),
+                        style: TextStyle(fontSize: 24),
+                        decoration: InputDecoration(
+                          labelText: 'Số tiền',
+                          contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
                       ),
-                      style: TextStyle(fontSize: 24),
-                      readOnly: true,
-                      onTap: () => Navigator.push(context,
-                          FadeRoute(page: BudgetCategoryPage(setName)))),
-                  SizedBox(height: 30),
-                  DateTimeField(
-                    decoration: InputDecoration(
-                      labelText: 'Ngày bắt đầu',
-                      contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    style: TextStyle(fontSize: 22),
-                    format: DateFormat("dd/MM/yyyy"),
-                    controller: beginTextController,
-                    readOnly: true,
-                    onShowPicker: (context, currentValue) async {
-                      final date = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1900),
-                          initialDate: currentValue ?? DateTime.now(),
-                          lastDate: DateTime(2100));
-                      if (date != null) {
-                        return DateTimeField.combine(date, null);
-                      } else {
-                        return currentValue;
-                      }
-                    },
-                  ),
-                  SizedBox(height: 30),
-                  DateTimeField(
-                    decoration: InputDecoration(
-                      labelText: 'Ngày kết thúc',
-                      contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    style: TextStyle(fontSize: 22),
-                    format: DateFormat("dd/MM/yyyy"),
-                    controller: endTextController,
-                    readOnly: true,
-                    onShowPicker: (context, currentValue) async {
-                      final date = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1900),
-                          initialDate: currentValue ?? DateTime.now(),
-                          lastDate: DateTime(2100));
-                      if (date != null) {
-                        return DateTimeField.combine(date, null);
-                      } else {
-                        return currentValue;
-                      }
-                    },
-                  ),
-                  SizedBox(height: 30),
-                ]))), inAsyncCall: _saving));
+                      SizedBox(height: 30),
+                      TextField(
+                          controller: nameTextController,
+                          decoration: InputDecoration(
+                            labelText: 'Loại giao dịch',
+                            contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          style: TextStyle(fontSize: 24),
+                          readOnly: true,
+                          onTap: () {
+                            final categoryList = [
+                              "Ăn uống",
+                              "Bạn bè",
+                              "Chi phí",
+                              "Giải trí",
+                              "Di chuyển",
+                              "Du lịch",
+                              "Giáo dục",
+                              "Gia đình",
+                              "Hoá đơn",
+                              "Mua sắm",
+                              "Kinh doanh",
+                              "Sức khoẻ",
+                              "Bảo hiểm"
+                            ];
+                            Navigator.push(
+                                context,
+                                FadeRoute(
+                                    page: CategoryPage(
+                                        categoryList, setName)));
+                          }),
+                      SizedBox(height: 30),
+                      DateTimeField(
+                        decoration: InputDecoration(
+                          labelText: 'Ngày bắt đầu',
+                          contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        style: TextStyle(fontSize: 22),
+                        format: DateFormat("dd/MM/yyyy"),
+                        controller: beginTextController,
+                        readOnly: true,
+                        onShowPicker: (context, currentValue) async {
+                          final date = await showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1900),
+                              initialDate: currentValue ?? DateTime.now(),
+                              lastDate: DateTime(2100));
+                          if (date != null) {
+                            return DateTimeField.combine(date, null);
+                          } else {
+                            return currentValue;
+                          }
+                        },
+                      ),
+                      SizedBox(height: 30),
+                      DateTimeField(
+                        decoration: InputDecoration(
+                          labelText: 'Ngày kết thúc',
+                          contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        style: TextStyle(fontSize: 22),
+                        format: DateFormat("dd/MM/yyyy"),
+                        controller: endTextController,
+                        readOnly: true,
+                        onShowPicker: (context, currentValue) async {
+                          final date = await showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1900),
+                              initialDate: currentValue ?? DateTime.now(),
+                              lastDate: DateTime(2100));
+                          if (date != null) {
+                            return DateTimeField.combine(date, null);
+                          } else {
+                            return currentValue;
+                          }
+                        },
+                      ),
+                      SizedBox(height: 30),
+                    ]))),
+            inAsyncCall: _saving));
   }
 }

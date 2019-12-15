@@ -4,6 +4,8 @@ import 'package:money_grower/blocs/user_bloc.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/user_model.dart';
 import 'package:money_grower/ui/budget_screen/budget_screen.dart';
+import 'package:money_grower/ui/convert_screen/convert_screen.dart';
+import 'package:money_grower/ui/custom_control/faded_transition.dart';
 import 'package:money_grower/ui/debt_screen/debt_screen.dart';
 import 'package:money_grower/ui/login_screen/welcome_screen.dart';
 import 'package:money_grower/ui/statistics_screen/statistics_screen.dart';
@@ -12,7 +14,7 @@ import 'package:async_loader/async_loader.dart';
 
 class MoneyGrowerApp extends StatelessWidget {
   final GlobalKey<AsyncLoaderState> asyncLoaderState =
-  new GlobalKey<AsyncLoaderState>();
+      new GlobalKey<AsyncLoaderState>();
 
   init() async {
     final userBloc = UserBloc();
@@ -33,9 +35,9 @@ class MoneyGrowerApp extends StatelessWidget {
       title: "Simple Note",
       home: asyncLoader,
       theme: ThemeData(
-        // Define the default brightness and colors.
-        primaryColor: Colors.green,
-        accentColor: Colors.green),
+          // Define the default brightness and colors.
+          primaryColor: Colors.green,
+          accentColor: Colors.green),
     );
   }
 }
@@ -43,7 +45,7 @@ class MoneyGrowerApp extends StatelessWidget {
 class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Row(
           children: <Widget>[
@@ -60,7 +62,7 @@ class LoadingScreen extends StatelessWidget {
 class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Row(
           children: <Widget>[
@@ -90,6 +92,8 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
+  final choiceList = ["Đổi tỉ giá", "Đăng xuất"];
+
   final List<Widget> screenList = [
     TransactionScreen(),
     DebtScreen(),
@@ -99,7 +103,7 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Row(
           children: <Widget>[
@@ -110,31 +114,36 @@ class MainScreenState extends State<MainScreen> {
               children: <Widget>[
                 SizedBox(height: 5),
                 Text("Tổng cộng:",
-                  style: TextStyle(fontSize: 14, color: Colors.black54)),
-                Text(FormatHelper().formatMoney(user.income - user.outgoings, "đ")),
+                    style: TextStyle(fontSize: 14, color: Colors.black54)),
+                Text(FormatHelper()
+                    .formatMoney(user.income - user.outgoings, "đ")),
                 SizedBox(height: 5)
               ],
             )
           ],
         ),
         actions: <Widget>[
-          FlatButton(
-            textColor: Colors.white,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LoginScreen(),
-                fullscreenDialog: true)),
-            child: Icon(Icons.settings),
-            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-          ),
+          Container(
+              margin: EdgeInsets.only(right: 10),
+              child: PopupMenuButton<String>(
+                icon: Icon(Icons.settings),
+                onSelected: choiceAction,
+                itemBuilder: (BuildContext context) {
+                  return choiceList
+                      .map((choice) => PopupMenuItem<String>(
+                            value: choice,
+                            child: Text(choice),
+                          ))
+                      .toList();
+                },
+              ))
         ],
       ),
       body: PageView(
         children: screenList,
         controller: pageController,
         onPageChanged: onPageChanged,
-      ),  //screenList[screenIndex],
+      ), //screenList[screenIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: screenIndex,
@@ -149,13 +158,27 @@ class MainScreenState extends State<MainScreen> {
             title: Text('Vay mượn', style: TextStyle(color: Colors.green)),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.insert_chart, color: Colors.green),
-            title: Text('Thống kê', style: TextStyle(color: Colors.green))),
+              icon: Icon(Icons.insert_chart, color: Colors.green),
+              title: Text('Thống kê', style: TextStyle(color: Colors.green))),
           BottomNavigationBarItem(
-            icon: Icon(Icons.collections_bookmark, color: Colors.green),
-            title: Text('Ngân sách', style: TextStyle(color: Colors.green)))
+              icon: Icon(Icons.collections_bookmark, color: Colors.green),
+              title: Text('Ngân sách', style: TextStyle(color: Colors.green)))
         ],
       ),
     );
+  }
+
+  void choiceAction(String choice) {
+    switch (choice) {
+      case "Đổi tỉ giá":
+        print('a');
+        Navigator.push(context,
+          FadeRoute(page: ConvertScreen()));
+        break;
+      case "Đăng xuất":
+        Navigator.of(context).pushAndRemoveUntil(
+            FadeRoute(page: LoginScreen()), (Route<dynamic> route) => false);
+        break;
+    }
   }
 }

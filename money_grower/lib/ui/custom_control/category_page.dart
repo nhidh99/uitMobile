@@ -3,26 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:money_grower/helper/icon_helper.dart';
 
 // ignore: must_be_immutable
-class BudgetCategoryPage extends StatelessWidget {
-  final categoryList = [
-    "Ăn uống",
-    "Bạn bè",
-    "Chi phí",
-    "Giải trí",
-    "Di chuyển",
-    "Du lịch",
-    "Giáo dục",
-    "Gia đình",
-    "Hoá đơn",
-    "Mua sắm",
-    "Kinh doanh",
-    "Sức khoẻ",
-    "Bảo hiểm"
-  ];
+class CategoryPage extends StatelessWidget {
+  final categoryList;
+  final setName;
 
-  Function setName;
-
-  BudgetCategoryPage(this.setName);
+  CategoryPage(this.categoryList, this.setName);
 
   @override
   Widget build(BuildContext context) {

@@ -27,7 +27,7 @@ class IconHelper {
       case "Trả nợ": return Icons.money_off;
       case "Vay tiền": return Icons.attach_money;
       case "Thu nợ": return Icons.attach_money;
+      default: return Icons.monetization_on;
     }
-    return null;
   }
 }
