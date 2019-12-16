@@ -126,7 +126,7 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
       saveSubmit();
       final budget =
           BudgetModel(null, name, beginDate, endDate, totalBudget, totalUsed);
-      BudgetBloc().insertBudget(budget);
+      await BudgetBloc().insertBudget(budget);
       Navigator.of(context).pop();
     }
   }
@@ -170,7 +170,7 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
                       TextField(
                           controller: nameTextController,
                           decoration: InputDecoration(
-                            labelText: 'Loại giao dịch',
+                            labelText: 'Loại ngân sách',
                             contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10)),
@@ -196,7 +196,7 @@ class BudgetAddPopupState extends State<BudgetAddPopup> {
                             Navigator.push(
                                 context,
                                 FadeRoute(
-                                    page: CategoryPage(
+                                    page: CategoryPage("Chọn loại ngân sách",
                                         categoryList, setName)));
                           }),
                       SizedBox(height: 30),

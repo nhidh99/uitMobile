@@ -109,12 +109,11 @@ class BudgetEditPopupState extends State<BudgetEditPopup> {
                 ));
         return;
       }
-
       saveSubmit();
       final budget = BudgetModel(
           widget.budget.id, name, beginDate, endDate, totalBudget, totalUsed);
-      Navigator.of(context).pop();
       await BudgetBloc().updateBudget(budget);
+      Navigator.of(context).pop();
     }
   }
 
@@ -156,7 +155,7 @@ class BudgetEditPopupState extends State<BudgetEditPopup> {
                   TextField(
                     controller: nameTextController,
                     decoration: InputDecoration(
-                      labelText: 'Loại giao dịch',
+                      labelText: 'Loại ngân sách',
                       contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),

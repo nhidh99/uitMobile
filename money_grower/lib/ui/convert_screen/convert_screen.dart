@@ -110,8 +110,7 @@ class ConvertScreenState extends State<ConvertScreen> {
     final response = await http
         .get(Uri.encodeFull(uri), headers: {"Accept": "application/json"});
     final responseBody = json.decode(response.body);
-    final result = (double.parse(price) *
-            (responseBody["rates"][desCurrency]));
+    final result = (double.parse(price) * (responseBody["rates"][desCurrency]));
     resultTextController.text = FormatHelper().formatMoney(result);
     setState(() => _saving = false);
   }
@@ -161,7 +160,7 @@ class ConvertScreenState extends State<ConvertScreen> {
                                   Navigator.push(
                                       context,
                                       FadeRoute(
-                                          page: CategoryPage(
+                                          page: CategoryPage("Chọn mã tiền tệ",
                                               categoryList, setSrcName)));
                                 })),
                         Spacer(),
@@ -194,7 +193,7 @@ class ConvertScreenState extends State<ConvertScreen> {
                                   Navigator.push(
                                       context,
                                       FadeRoute(
-                                          page: CategoryPage(
+                                          page: CategoryPage("Chọn mã tiền tệ",
                                               categoryList, setDesName)));
                                 })),
                         Spacer(),

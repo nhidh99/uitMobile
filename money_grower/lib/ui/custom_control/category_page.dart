@@ -6,13 +6,14 @@ import 'package:money_grower/helper/icon_helper.dart';
 class CategoryPage extends StatelessWidget {
   final categoryList;
   final setName;
+  final title;
 
-  CategoryPage(this.categoryList, this.setName);
+  CategoryPage(this.title, this.categoryList, this.setName);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Chọn loại ngân sách')),
+        appBar: AppBar(title: Text(title)),
         body: ListView.builder(
             itemCount: categoryList.length,
             itemBuilder: (context, index) {

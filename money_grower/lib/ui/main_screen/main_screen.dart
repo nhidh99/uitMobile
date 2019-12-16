@@ -77,7 +77,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class MainScreenState extends State<MainScreen> {
-  final pageController = PageController();
   final user = UserModel();
   final choiceList = ["🔃  Đổi tỉ giá", "🚪  Đăng xuất"];
 
@@ -133,7 +132,6 @@ class MainScreenState extends State<MainScreen> {
           setState(() {
             screenIndex = newIndex;
           });
-          pageController.jumpToPage(newIndex);
         },
         items: [
           BottomNavigationBarItem(
