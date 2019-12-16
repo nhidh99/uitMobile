@@ -169,25 +169,25 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+  flushbar:
+    dependency: transitive
+    description:
+      name: flushbar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.9.1"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_auth_buttons:
+  flutter_login:
     dependency: "direct dev"
     description:
-      name: flutter_auth_buttons
+      name: flutter_login
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0"
-  flutter_facebook_login:
-    dependency: "direct dev"
-    description:
-      name: flutter_facebook_login
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0"
+    version: "1.0.10+1"
   flutter_slidable:
     dependency: "direct dev"
     description:
@@ -205,27 +205,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  google_sign_in:
-    dependency: "direct dev"
-    description:
-      name: google_sign_in
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.0"
-  google_sign_in_platform_interface:
+  font_awesome_flutter:
     dependency: transitive
     description:
-      name: google_sign_in_platform_interface
+      name: font_awesome_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
-  google_sign_in_web:
-    dependency: transitive
-    description:
-      name: google_sign_in_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.2+1"
+    version: "8.5.0"
   http:
     dependency: transitive
     description:
@@ -324,6 +310,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.4"
+  provider:
+    dependency: transitive
+    description:
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.0"
   quiver:
     dependency: transitive
     description:
@@ -399,6 +392,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.11"
+  transformer_page_view:
+    dependency: transitive
+    description:
+      name: transformer_page_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.6"
   typed_data:
     dependency: transitive
     description:
@@ -421,5 +421,5 @@ packages:
     source: hosted
     version: "3.5.0"
 sdks:
-  dart: ">=2.6.0 <3.0.0"
+  dart: ">=2.4.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.4 <2.0.0"

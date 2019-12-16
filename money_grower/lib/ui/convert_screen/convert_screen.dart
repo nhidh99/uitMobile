@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/ui/custom_control/category_page.dart';
 import 'package:money_grower/ui/custom_control/faded_transition.dart';
 
@@ -69,7 +70,68 @@ class ConvertScreenState extends State<ConvertScreen> {
     'ZAR (South African Rand)'
   ];
 
-  Function setName() {}
+  final srcTextController = TextEditingController();
+  final desTextController = TextEditingController();
+  final priceTextController = TextEditingController();
+  final resultTextController = TextEditingController();
+
+  var srcText = "VND";
+  var desText = "USD";
+  var priceHintText = "Số tiền (VND)";
+  var resultHintText = "Kết quả (USD)";
+
+  // ignore: missing_return
+  Function setSrcName(String name) {
+    final unit = name.substring(0, 3);
+    setState(() {
+      srcText = unit;
+      priceHintText = "Số tiền (" + unit + ")";
+      srcTextController.text = srcText;
+      resultTextController.text = "";
+    });
+  }
+
+  // ignore: missing_return
+  Function setDesName(String name) {
+    final unit = name.substring(0, 3);
+    setState(() {
+      desText = unit;
+      resultHintText = "Kết quả (" + unit + ")";
+      desTextController.text = desText;
+      resultTextController.text = "";
+    });
+  }
+
+  Future convert(String srcCurrency, String desCurrency) async {
+    final price = priceTextController.text.split(',').join();
+    if (price.isEmpty) return;
+    setState(() => _saving = true);
+    String uri = "https://api.exchangerate-api.com/v4/latest/$srcCurrency";
+    final response = await http
+        .get(Uri.encodeFull(uri), headers: {"Accept": "application/json"});
+    final responseBody = json.decode(response.body);
+    final result = (double.parse(price) *
+            (responseBody["rates"][desCurrency]));
+    resultTextController.text = FormatHelper().formatMoney(result);
+    setState(() => _saving = false);
+  }
+
+  void setPrice(String price) {
+    final parseText = price.split(',').join('');
+    final formattedText = FormatHelper().formatMoney(int.parse(parseText));
+    priceTextController.value = TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: formattedText.length),
+    );
+    resultTextController.text = "";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    srcTextController.text = srcText;
+    desTextController.text = desText;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +147,7 @@ class ConvertScreenState extends State<ConvertScreen> {
                         Container(
                             width: 100,
                             child: TextField(
+                                controller: srcTextController,
                                 decoration: InputDecoration(
                                   labelText: 'Nguồn',
                                   contentPadding:
@@ -99,19 +162,25 @@ class ConvertScreenState extends State<ConvertScreen> {
                                       context,
                                       FadeRoute(
                                           page: CategoryPage(
-                                              categoryList, setName)));
+                                              categoryList, setSrcName)));
                                 })),
                         Spacer(),
                         FlatButton(
                           color: Colors.green,
                           shape: CircleBorder(),
-                          onPressed: () => {},
+                          onPressed: () {
+                            // swap currency unit
+                            final tempUnit = srcTextController.text;
+                            setSrcName(desTextController.text);
+                            setDesName(tempUnit);
+                          },
                           child: Icon(Icons.swap_horiz, color: Colors.white),
                         ),
                         Spacer(),
                         Container(
                             width: 100,
                             child: TextField(
+                                controller: desTextController,
                                 decoration: InputDecoration(
                                   labelText: 'Đích',
                                   contentPadding:
@@ -126,20 +195,21 @@ class ConvertScreenState extends State<ConvertScreen> {
                                       context,
                                       FadeRoute(
                                           page: CategoryPage(
-                                              categoryList, setName)));
+                                              categoryList, setDesName)));
                                 })),
                         Spacer(),
                       ]),
                       SizedBox(height: 30),
                       TextField(
+                        controller: priceTextController,
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(15),
                           WhitelistingTextInputFormatter.digitsOnly
                         ],
-                        //onChanged: (text) => setPrice(text),
+                        onChanged: (text) => setPrice(text),
                         style: TextStyle(fontSize: 24),
                         decoration: InputDecoration(
-                          labelText: 'Số tiền',
+                          labelText: priceHintText,
                           contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -149,14 +219,11 @@ class ConvertScreenState extends State<ConvertScreen> {
                       ),
                       SizedBox(height: 30),
                       TextField(
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(15),
-                          WhitelistingTextInputFormatter.digitsOnly
-                        ],
-                        //onChanged: (text) => setPrice(text),
+                        readOnly: true,
                         style: TextStyle(fontSize: 24),
+                        controller: resultTextController,
                         decoration: InputDecoration(
-                          labelText: 'Giá đổi',
+                          labelText: resultHintText,
                           contentPadding: EdgeInsets.fromLTRB(20, 30, 20, 20),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -164,6 +231,24 @@ class ConvertScreenState extends State<ConvertScreen> {
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),
                       ),
+                      SizedBox(height: 40),
+                      SizedBox(
+                          width: double.infinity,
+                          child: FlatButton(
+                            padding: EdgeInsets.all(15),
+                            color: Colors.green,
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            onPressed: () async {
+                              final srcCurrency = srcText;
+                              final desCurrency = desText;
+                              await convert(srcCurrency, desCurrency);
+                            },
+                            child: Text("Đổi tỉ giá",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20)),
+                          )),
                     ]))),
             inAsyncCall: _saving));
   }

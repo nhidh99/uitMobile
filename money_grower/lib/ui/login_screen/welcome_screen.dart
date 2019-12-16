@@ -1,179 +1,105 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+import 'package:flutter/services.dart';
+import 'package:money_grower/blocs/user_bloc.dart';
+import 'package:money_grower/models/user_model.dart';
+import 'package:money_grower/ui/custom_control/faded_transition.dart';
+import 'package:money_grower/ui/main_screen/main_screen.dart';
+import 'package:flutter_login/flutter_login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import 'new_user_screen.dart';
+class WelcomeScreen extends StatelessWidget {
+  Duration get loginTime => Duration(milliseconds: 2250);
+  final user = UserModel();
+  final userBloc = UserBloc();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-class LoginScreen extends StatefulWidget {
-  @override
-  State<LoginScreen> createState() => LoginScreenState();
-}
-
-class LoginScreenState extends State<LoginScreen> {
-
-  final googleSignIn = new GoogleSignIn();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.green[500],
-        child: Stack(
-          children: <Widget>[
-            Center(
-              child: Container(
-                width: 400,
-                height: 350,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Column(children: <Widget>[
-                      Material(
-                          elevation: 20.0,
-                          borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.asset(
-                              'assets/coins.png',
-                              width: 80,
-                              height: 80,
-                            ),
-                          )),
-                      SizedBox(height: 20),
-                      Text("MoneyGrower",
-                          style: TextStyle(
-                              fontSize: 36,
-                              color: Colors.white,
-                              fontFamily: "Arial",
-                              fontWeight: FontWeight.bold))
-                    ]),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: SizedBox(
-                            width: 250,
-                            height: 50,
-                            child: FacebookSignInButton(
-                              text: "Sign in with Facebook",
-                              onPressed: () => loginWithFacebook(),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: SizedBox(
-                              width: 250,
-                              height: 50,
-                              child: GoogleSignInButton(
-                                onPressed: () => signInWithGoogle(),
-                              )),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  Future<bool> checkUserExist(LoginData data) async {
+    final user = await userBloc.getUserByUsername(data.name);
+    return user != null;
   }
 
-  void checkUser() async {
-    final ref = Firestore.instance.collection("users");
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    final response = await ref
-        .where('username', isEqualTo: user.uid)
-        .limit(1)
-        .getDocuments();
+  // ignore: missing_return
+  Future<String> authSignUp(LoginData data) async {
+    user.username = data.name;
+    user.income = 0;
 
-    if (response.documents.length < 1) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AddNewUserScreen(),
-              fullscreenDialog: true));
+    bool userExist = await checkUserExist(data);
+    if (userExist) {
+      return "Tên người dùng đã tồn tại!";
     } else {
-      final json = response.documents.elementAt(0);
-      if (json.data["username"] == user.uid) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AddNewUserScreen(),
-                fullscreenDialog: true));
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AddNewUserScreen(),
-                fullscreenDialog: true));
+      userBloc.insertUser(user);
+      try {
+        FirebaseUser fbUser = (await _auth.createUserWithEmailAndPassword(
+                email: data.name, password: data.password))
+            .user;
+        await fbUser.sendEmailVerification();
+      } on PlatformException {
+        return "Lỗi đăng nhập!";
       }
     }
   }
 
-  Future<String> signInWithGoogle() async {
-    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
-
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
-
-    final _auth = FirebaseAuth.instance;
-    final AuthResult authResult = await _auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
-
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
-
-    final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-    checkUser();
-    return 'signInWithGoogle succeeded: $user';
-  }
-
-  void signOutGoogle() async {
-    final googleSignIn = GoogleSignIn();
-    await googleSignIn.signOut();
-  }
-
-  Future<void> loginWithFacebook() async {
-    final facebookLogin = FacebookLogin();
-    final facebookLoginResult =
-        await facebookLogin.logIn(['email']);
-
-    switch (facebookLoginResult.status) {
-      case FacebookLoginStatus.error:
-        break;
-
-      case FacebookLoginStatus.cancelledByUser:
-        break;
-
-      case FacebookLoginStatus.loggedIn:
-        await firebaseAuthWithFacebook(token: facebookLoginResult.accessToken);
-        checkUser();
-        break;
+  // ignore: missing_return
+  Future<String> _authUser(LoginData data) async {
+    bool userExists = await checkUserExist(data);
+    if (!userExists) {
+      return "Email không tồn tại";
+    }
+    try {
+      await _auth.signInWithEmailAndPassword(
+          email: data.name, password: data.password);
+      user.username = data.name;
+    } on Exception {
+      return 'Sai tên tài khoản/mật khẩu';
     }
   }
 
-  Future<FirebaseUser> firebaseAuthWithFacebook(
-      {@required FacebookAccessToken token}) async {
-    AuthCredential credential =
-        FacebookAuthProvider.getCredential(accessToken: token.token);
-    FirebaseUser firebaseUser =
-        (await FirebaseAuth.instance.signInWithCredential(credential)).user;
-    return firebaseUser;
+  Future<String> _recoverPassword(String name) async {
+    user.username = name;
+    await userBloc.getUserByUsername(name);
+    await _auth.sendPasswordResetEmail(email: name);
+    return Future.delayed(loginTime).then((_) {
+      if (name != user.username) {
+        return 'Tên đăng nhập không tồn tại';
+      }
+      return null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.green,
+      padding: EdgeInsets.only(top: 50),
+      child: FlutterLogin(
+        title: 'MoneyGrower',
+        logo: 'assets/coins.png',
+        onLogin: _authUser,
+        onSignup: authSignUp,
+        messages: LoginMessages(
+            usernameHint: 'Email',
+            passwordHint: 'Mật khẩu',
+            confirmPasswordHint: "Nhập lại mật khẩu",
+            confirmPasswordError: "Mật khẩu không khớp",
+            loginButton: 'Đăng nhập',
+            signupButton: 'Đăng kí',
+            recoverPasswordButton: 'Đổi mật khẩu',
+            recoverPasswordIntro:
+                'Đừng lo, chúng tôi sẽ giúp bạn lấy lại mật khẩu ngay bây giờ!',
+            recoverPasswordDescription:
+                'Chúng tôi sẽ gửi cho bạn một email\nhỗ trợ đổi mật khẩu!',
+            recoverPasswordSuccess: 'Email đổi mật khẩu đã được gửi',
+            goBackButton: 'Quay lại',
+            forgotPasswordButton: 'Quên mật khẩu?'),
+        onSubmitAnimationCompleted: () {
+          screenIndex = 0;
+          Navigator.of(context).pushAndRemoveUntil(
+              FadeRoute(page: MoneyGrowerApp()),
+              (Route<dynamic> route) => false);
+        },
+        onRecoverPassword: _recoverPassword,
+      ),
+    );
   }
 }

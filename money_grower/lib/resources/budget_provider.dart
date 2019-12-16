@@ -1,7 +1,6 @@
 import 'package:money_grower/helper/doc_helper.dart';
 import 'package:money_grower/models/budget_model.dart';
 import 'package:money_grower/models/transaction_model.dart';
-import 'package:money_grower/models/user_model.dart';
 
 class BudgetProvider {
   final doc = DocHelper('budgets');

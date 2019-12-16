@@ -8,8 +8,9 @@ class UserProvider {
 
   Future getUserByUsername(String username) async {
     final response = await doc.ref.where('username', isEqualTo: username).limit(1).getDocuments();
+    if (response.documents.isEmpty) return null;
     final json = response.documents.elementAt(0);
-    UserModel.fromMap(json.data, json.documentID);
+    return UserModel.fromMap(json.data, json.documentID);
   }
 
   Future updateUser(UserModel data) async {

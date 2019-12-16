@@ -11,6 +11,9 @@ import 'package:money_grower/ui/login_screen/welcome_screen.dart';
 import 'package:money_grower/ui/statistics_screen/statistics_screen.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_screen.dart';
 import 'package:async_loader/async_loader.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+int screenIndex = 0;
 
 class MoneyGrowerApp extends StatelessWidget {
   final GlobalKey<AsyncLoaderState> asyncLoaderState =
@@ -18,26 +21,18 @@ class MoneyGrowerApp extends StatelessWidget {
 
   init() async {
     final userBloc = UserBloc();
-    await userBloc.getUserByUsername('nhidh99');
+    UserModel().username = (await FirebaseAuth.instance.currentUser()).email;
+    await userBloc.getUserByUsername(UserModel().username);
   }
 
   @override
   Widget build(BuildContext context) {
-    final asyncLoader = new AsyncLoader(
+    return AsyncLoader(
       key: asyncLoaderState,
       initState: () async => await init(),
       renderLoad: () => LoadingScreen(),
       renderError: ([error]) => ErrorScreen(),
       renderSuccess: ({data}) => MainScreen(),
-    );
-
-    return new MaterialApp(
-      title: "Simple Note",
-      home: asyncLoader,
-      theme: ThemeData(
-          // Define the default brightness and colors.
-          primaryColor: Colors.green,
-          accentColor: Colors.green),
     );
   }
 }
@@ -49,7 +44,7 @@ class LoadingScreen extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: <Widget>[
-            Image.asset('assets/coins.png', width: 64, height: 64),
+            Image.asset('assets/coins.png', width: 60, height: 60),
             Text("Money Grower"),
           ],
         ),
@@ -66,7 +61,7 @@ class ErrorScreen extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: <Widget>[
-            Image.asset('assets/coins.png', width: 64, height: 64),
+            Image.asset('assets/coins.png', width: 60, height: 60),
             Text("Money Grower"),
           ],
         ),
@@ -84,15 +79,7 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends State<MainScreen> {
   final pageController = PageController();
   final user = UserModel();
-  int screenIndex = 0;
-
-  void onPageChanged(int index) {
-    setState(() {
-      screenIndex = index;
-    });
-  }
-
-  final choiceList = ["Đổi tỉ giá", "Đăng xuất"];
+  final choiceList = ["🔃  Đổi tỉ giá", "🚪  Đăng xuất"];
 
   final List<Widget> screenList = [
     TransactionScreen(),
@@ -107,7 +94,7 @@ class MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: Row(
           children: <Widget>[
-            Image.asset('assets/coins.png', width: 64, height: 64),
+            Image.asset('assets/coins.png', width: 60, height: 60),
             SizedBox(width: 8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,8 +102,7 @@ class MainScreenState extends State<MainScreen> {
                 SizedBox(height: 5),
                 Text("Tổng cộng:",
                     style: TextStyle(fontSize: 14, color: Colors.black54)),
-                Text(FormatHelper()
-                    .formatMoney(user.income - user.outgoings, "đ")),
+                Text(FormatHelper().formatMoney(user.income, "đ")),
                 SizedBox(height: 5)
               ],
             )
@@ -139,15 +125,16 @@ class MainScreenState extends State<MainScreen> {
               ))
         ],
       ),
-      body: PageView(
-        children: screenList,
-        controller: pageController,
-        onPageChanged: onPageChanged,
-      ), //screenList[screenIndex],
+      body: screenList[screenIndex], //screenList[screenIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: screenIndex,
-        onTap: (newIndex) => pageController.jumpToPage(newIndex),
+        onTap: (newIndex) {
+          setState(() {
+            screenIndex = newIndex;
+          });
+          pageController.jumpToPage(newIndex);
+        },
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.account_balance_wallet, color: Colors.green),
@@ -168,16 +155,37 @@ class MainScreenState extends State<MainScreen> {
     );
   }
 
-  void choiceAction(String choice) {
+  void choiceAction(String choice) async {
     switch (choice) {
-      case "Đổi tỉ giá":
-        print('a');
-        Navigator.push(context,
-          FadeRoute(page: ConvertScreen()));
+      case "🔃  Đổi tỉ giá":
+        Navigator.push(context, FadeRoute(page: ConvertScreen()));
         break;
-      case "Đăng xuất":
-        Navigator.of(context).pushAndRemoveUntil(
-            FadeRoute(page: LoginScreen()), (Route<dynamic> route) => false);
+      case "🚪  Đăng xuất":
+        showDialog(
+            context: context,
+            builder: (_) => CupertinoAlertDialog(
+                  title: Text("Đăng xuất?"),
+                  content: Text("\nXác nhận đăng xuất?",
+                      style: TextStyle(fontSize: 16)),
+                  actions: [
+                    CupertinoDialogAction(
+                        isDefaultAction: true,
+                        child: Text("Xác nhận",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent)),
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.of(context).pushAndRemoveUntil(
+                              FadeRoute(page: WelcomeScreen()),
+                              (Route<dynamic> route) => false);
+                        }),
+                    CupertinoDialogAction(
+                        isDefaultAction: true,
+                        child: Text("Huỷ bỏ"),
+                        onPressed: () => Navigator.of(context).pop())
+                  ],
+                ));
         break;
     }
   }
