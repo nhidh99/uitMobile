@@ -7,15 +7,20 @@ import 'package:money_grower/blocs/transaction_bloc.dart';
 import 'package:money_grower/helper/format_helper.dart';
 import 'package:money_grower/models/transaction_model.dart';
 import 'package:money_grower/ui/custom_control/faded_transition.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:money_grower/ui/transaction_screen/transaction_category_page.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-class TransactionAddPopup extends StatefulWidget {
+// ignore: must_be_immutable
+class TransactionEditPopup extends StatefulWidget {
+  TransactionModel transaction;
+
+  TransactionEditPopup(this.transaction);
+
   @override
-  State<StatefulWidget> createState() => TransactionAddPopupState();
+  State<StatefulWidget> createState() => TransactionEditPopupState();
 }
 
-class TransactionAddPopupState extends State<TransactionAddPopup> {
+class TransactionEditPopupState extends State<TransactionEditPopup> {
   final priceTextController = TextEditingController();
   final dateTextController = TextEditingController();
   final nameTextController = TextEditingController();
@@ -25,8 +30,24 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
   @override
   void initState() {
     super.initState();
-    priceTextController.text = '0';
-    dateTextController.text = DateFormat("dd/MM/yyyy").format(DateTime.now());
+    final transaction = widget.transaction;
+    priceTextController.text =
+        FormatHelper().formatMoney(transaction.price.abs());
+    dateTextController.text = DateFormat("dd/MM/yyyy").format(transaction.date);
+    nameTextController.text = transaction.name;
+    noteTextController.text = transaction.note;
+  }
+
+  void saveSubmit() {
+    setState(() {
+      _saving = true;
+    });
+
+    Future.delayed(new Duration(seconds: 4), () {
+      setState(() {
+        _saving = false;
+      });
+    });
   }
 
   void setPrice(String price) {
@@ -42,7 +63,36 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
     nameTextController.text = name;
   }
 
-  void submitTransaction() async {
+  void deleteTransaction() {
+    showDialog(
+        context: context,
+        builder: (_) => CupertinoAlertDialog(
+              title: Text("Xác nhận"),
+              content: Text("Xác nhận xoá giao dịch?",
+                  style: TextStyle(fontSize: 16)),
+              actions: [
+                CupertinoDialogAction(
+                    isDefaultAction: true,
+                    child: Text("Xác nhận",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent)),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      saveSubmit();
+                      await TransactionBloc()
+                          .deleteTransaction(widget.transaction);
+                      Navigator.of(context).pop();
+                    }),
+                CupertinoDialogAction(
+                    isDefaultAction: true,
+                    child: Text("Huỷ bỏ"),
+                    onPressed: () => Navigator.of(context).pop())
+              ],
+            ));
+  }
+
+  void updateTransaction() async {
     final priceText = priceTextController.text.split(',').join('');
     final dateText = dateTextController.text;
     final name = nameTextController.text;
@@ -83,25 +133,16 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
       final date = DateFormat("dd/MM/yyyy").parse(dateText);
       var transaction;
 
-      if (name == 'Cho vay' || name == 'Vay tiền') {
-        transaction = DebtTransactionModel(
-            null, name, note, isIncomeTransaction ? price : -price, date);
+      if (['Cho vay', 'Vay tiền'].contains(name)) {
+        transaction = DebtTransactionModel(widget.transaction.id, name, note,
+            isIncomeTransaction ? price : -price, date);
       } else {
-        transaction = TransactionModel(
-            null, name, note, isIncomeTransaction ? price : -price, date);
+        transaction = TransactionModel(widget.transaction.id, name, note,
+            isIncomeTransaction ? price : -price, date);
       }
 
-      setState(() {
-        _saving = true;
-      });
-
-      Future.delayed(new Duration(seconds: 4), () {
-        setState(() {
-          _saving = false;
-        });
-      });
-
-      await TransactionBloc().insertTransaction(transaction);
+      saveSubmit();
+      await TransactionBloc().updateTransaction(transaction);
       Navigator.of(context).pop();
     }
   }
@@ -110,13 +151,21 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Thêm giao dịch'),
+          title: Text('Thông tin giao dịch'),
           actions: <Widget>[
             Container(
-                margin: EdgeInsets.only(right: 20),
                 child: IconButton(
-                    icon: Icon(Icons.playlist_add_check),
-                    onPressed: () => submitTransaction()))
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      deleteTransaction();
+                    })),
+            Container(
+                margin: EdgeInsets.only(right: 25),
+                child: IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      updateTransaction();
+                    }))
           ],
         ),
         body: ModalProgressHUD(
@@ -177,10 +226,12 @@ class TransactionAddPopupState extends State<TransactionAddPopup> {
                           ),
                           style: TextStyle(fontSize: 24),
                           readOnly: true,
-                          onTap: () => Navigator.push(
-                              context,
-                              FadeRoute(
-                                  page: TransactionCategoryPage(setName)))),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                FadeRoute(
+                                    page: TransactionCategoryPage(setName)));
+                          }),
                       SizedBox(height: 30),
                       TextField(
                         controller: noteTextController,

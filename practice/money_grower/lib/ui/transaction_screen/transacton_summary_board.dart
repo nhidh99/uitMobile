@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:loginapp/helper/format_helper.dart';
-import 'package:loginapp/ui/transaction_screen/transaction_summary.dart';
-
+import 'package:money_grower/helper/format_helper.dart';
+import 'package:money_grower/ui/transaction_screen/transaction_summary.dart';
 
 class TransactionSummaryBoard extends StatelessWidget {
   final formatter = FormatHelper();

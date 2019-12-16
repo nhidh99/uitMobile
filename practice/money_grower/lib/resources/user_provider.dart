@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:loginapp/helper/doc_helper.dart';
+import 'package:money_grower/helper/doc_helper.dart';
 import '../models/user_model.dart';
 
 class UserProvider {
@@ -12,24 +12,8 @@ class UserProvider {
     UserModel.fromMap(json.data, json.documentID);
   }
 
-  Future isUserExist(String uid) async {
-    var isContain = false;
-    final response = await doc.ref.getDocuments();
-    List<String> userNameList = [];
-    response.documents.forEach((doc) {
-      final uid = doc.data["username"];
-      userNameList.add(uid);
-    });
-
-    isContain = userNameList.contains(uid);
-
-    return{
-      'isContained' : isContain,
-    };
-  }
-
-  Future updateUser(UserModel data, String id) async {
-    await doc.ref.document(id).updateData(data.toJson());
+  Future updateUser(UserModel data) async {
+    await doc.ref.document(data.id).updateData(data.toJson());
   }
 
   Future insertUser(UserModel data) async {

@@ -18,19 +18,11 @@ class UserModel {
     _instance.outgoings = snapshot['outgoings'];
   }
 
-  UserModel.addTransactionChange(int money){
-    if(money > 0){
-      _instance.income += money;
-    }
-    else
-      _instance.outgoings -= money;
-  }
-
   toJson() {
     return {
       "username": username,
       "income": income,
-      "outgoings": outgoings
+      "outgoings": outgoings,
     };
   }
 }

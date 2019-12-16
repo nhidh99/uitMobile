@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:loginapp/helper/icon_helper.dart';
-
-
+import 'package:money_grower/helper/icon_helper.dart';
 
 // ignore: must_be_immutable
 class TransactionCategoryPage extends StatelessWidget {
@@ -31,29 +29,29 @@ class TransactionCategoryPage extends StatelessWidget {
 // ignore: must_be_immutable, non_constant_identifier_names
   Widget TransactionCategoryList(List categoryList) {
     return ListView.builder(
-        itemCount: categoryList.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-              onTap: () {
-                setName(categoryList[index]);
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom:
-                          BorderSide(width: 1.5, color: Colors.black12)),
-                      color: Colors.white),
-                  padding: EdgeInsets.all(20),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(IconHelper().getIconByName(categoryList[index]),
-                          color: Colors.green),
-                      SizedBox(width: 15),
-                      Text(categoryList[index], style: TextStyle(fontSize: 20))
-                    ],
-                  )));
-        });
+      itemCount: categoryList.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            setName(categoryList[index]);
+            Navigator.of(context).pop();
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom:
+                BorderSide(width: 1.5, color: Colors.black12)),
+              color: Colors.white),
+            padding: EdgeInsets.all(20),
+            child: Row(
+              children: <Widget>[
+                Icon(IconHelper().getIconByName(categoryList[index]),
+                  color: Colors.green),
+                SizedBox(width: 15),
+                Text(categoryList[index], style: TextStyle(fontSize: 20))
+              ],
+            )));
+      });
   }
 
   @override
