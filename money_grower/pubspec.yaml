@@ -32,8 +32,15 @@ dev_dependencies:
   progress_indicators: ^0.1.4
   modal_progress_hud: ^0.1.3
   flutter_login: ^1.0.10+1
+  flutter_launcher_icons: ^0.7.4
 
 flutter:
   uses-material-design: true
   assets:
     - assets/
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/icon.png"
+  image_path_android: "assets/icon.png"

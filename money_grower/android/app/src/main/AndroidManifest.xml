@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.money_grower">
     <application
-            android:label="money_grower"
+            android:label="MoneyGrower"
             android:icon="@mipmap/ic_launcher">
         <activity
                 android:name="io.flutter.embedding.android.FlutterActivity"

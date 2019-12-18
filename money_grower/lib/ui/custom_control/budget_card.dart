@@ -83,7 +83,7 @@ class BudgetCardState extends State<BudgetCard> {
                     dateFormatter.format(budget.beginDate) +
                         " - " +
                         dateFormatter.format(budget.endDate),
-                    style: TextStyle(fontSize: 16)),
+                    style: TextStyle(fontSize: 15)),
                 SizedBox(height: 6),
                 Text(
                     "Ngân sách: " +
@@ -100,10 +100,10 @@ class BudgetCardState extends State<BudgetCard> {
             Column(
               children: <Widget>[
                 IconButton(
-                    icon: Icon(Icons.delete, color: Colors.redAccent, size: 30),
+                    icon: Icon(Icons.delete, color: Colors.redAccent, size: 28),
                     onPressed: () => deleteBudget(budget.id)),
                 IconButton(
-                    icon: Icon(Icons.edit, color: Colors.green, size: 30),
+                    icon: Icon(Icons.edit, color: Colors.green, size: 28),
                     onPressed: () => Navigator.push(
                         context, FadeRoute(page: BudgetEditPopup(budget))))
               ],

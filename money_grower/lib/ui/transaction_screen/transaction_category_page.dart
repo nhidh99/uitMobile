@@ -63,9 +63,9 @@ class TransactionCategoryPage extends StatelessWidget {
         appBar: AppBar(
           bottom: TabBar(
             tabs: [
-              Tab(icon: Text("VAY/TRẢ NỢ", style: TextStyle(fontSize: 16))),
-              Tab(icon: Text("TIỀN RA", style: TextStyle(fontSize: 16))),
-              Tab(icon: Text("TIỀN VÀO", style: TextStyle(fontSize: 16)))
+              Tab(icon: Text("VAY/TRẢ NỢ", style: TextStyle(fontSize: 14))),
+              Tab(icon: Text("TIỀN RA", style: TextStyle(fontSize: 14))),
+              Tab(icon: Text("TIỀN VÀO", style: TextStyle(fontSize: 14)))
             ],
           ),
           title: Text('Chọn loại giao dịch'),

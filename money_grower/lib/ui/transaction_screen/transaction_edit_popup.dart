@@ -145,7 +145,7 @@ class TransactionEditPopupState extends State<TransactionEditPopup> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Thông tin giao dịch'),
+          title: Text('Chi tiết giao dịch'),
           actions: <Widget>[
             Container(
                 child: IconButton(
