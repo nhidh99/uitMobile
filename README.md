@@ -14,7 +14,7 @@ Nhận thấy việc ghi chép thông tin chi tiêu trở nên rất quan trọn
 ![alt text](https://raw.githubusercontent.com/nhidh99/uitMobile/master/money_grower/assets/poster-1.jpg)
 
 # hình ảnh demo
-![alt text](https://raw.githubusercontent.com/nhidh99/uitMobile/master/money_grower/assets/App.jpg)
+![alt text](https://raw.githubusercontent.com/nhidh99/uitMobile/master/money_grower/assets/App.png)
 
 # chức năng chính
 - Ghi chú chi tiêu: Các thông tin như tiền vào, tiền ra, vay nợ được lưu lại bằng các thao tác thêm/xoá/sửa.
